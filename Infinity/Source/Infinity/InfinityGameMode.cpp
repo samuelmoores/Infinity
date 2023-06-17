@@ -14,17 +14,7 @@ AInfinityGameMode::AInfinityGameMode()
 	if (DefaultPawnClass != ADefaultPawn::StaticClass())
 	{
 		//DefaultPawnClass = PlayerPawnBPClass.Class;
-
 	}
-	
 }
 
-void AInfinityGameMode::InitGameState()
-{
-	Super::InitGameState();
-
-	//Set default pawn
-	DefaultPawnClass = CustomPawnClass;
-	
-}
 

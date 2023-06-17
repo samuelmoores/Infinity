@@ -15,12 +15,6 @@ class AInfinityGameMode : public AGameModeBase
 public:
 	AInfinityGameMode();
 
-	void InitGameState() override;
-
-private:
-	UPROPERTY(EditAnywhere, NoClear)
-	TSubclassOf<APlayerCharacter> CustomPawnClass = APlayerCharacter::StaticClass();
-
 };
 
 

@@ -18,9 +18,19 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class UCameraComponent* Camera;
 
+	UPROPERTY(EditAnywhere)
+	float rotationSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float moveSpeed;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void MoveForward(float value);
+	void MoveRight(float value);
+	void Rotate(float value);
 
 public:	
 	// Called every frame
@@ -28,6 +38,5 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 
 };

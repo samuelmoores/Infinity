@@ -3,10 +3,13 @@
 
 #include "PlayerCharacter.h"
 
+#include <string>
+
 #include "InputTriggers.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
+#include "Math/UnitConversion.h"
 
 
 // Sets default values
@@ -24,6 +27,34 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+}
+
+void APlayerCharacter::MoveForward(float value)
+{
+	FVector playerLocation = GetActorLocation();
+	
+	playerLocation += GetActorForwardVector() * value * moveSpeed;
+	SetActorLocation(playerLocation);
+	
+}
+
+void APlayerCharacter::MoveRight(float value)
+{
+	FVector playerLocation = GetActorLocation();
+
+	playerLocation += GetActorRightVector() * value * moveSpeed;
+	SetActorLocation(playerLocation);
+	
+}
+
+void APlayerCharacter::Rotate(float value)
+{
+	auto playerRotation = GetController()->GetControlRotation();
+
+	playerRotation.Yaw += value * rotationSpeed;
+
+	GetController()->SetControlRotation(playerRotation);
 	
 }
 
@@ -39,7 +70,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &APlayerCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(TEXT("Rotation"), this, &APlayerCharacter::Rotate);
 
 }
 
