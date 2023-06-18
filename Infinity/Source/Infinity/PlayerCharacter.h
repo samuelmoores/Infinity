@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
@@ -15,8 +17,17 @@ public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class UCameraComponent* Camera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	class USpringArmComponent* CameraArm;
+
+	UPROPERTY(EditAnywhere)
+	class UInputMappingContext* PlayerInput;
+
+	UPROPERTY(EditAnywhere)
+	class UInputAction* LookAction;
 
 	UPROPERTY(EditAnywhere)
 	float rotationSpeed;
@@ -31,6 +42,9 @@ protected:
 	void MoveForward(float value);
 	void MoveRight(float value);
 	void Rotate(float value);
+	void LookX(float value);
+	void LookY(float value);
+	void Jump();
 
 public:	
 	// Called every frame
