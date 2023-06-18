@@ -41,10 +41,10 @@ protected:
 
 	void MoveForward(float value);
 	void MoveRight(float value);
-	void Rotate(float value);
 	void LookX(float value);
 	void LookY(float value);
 	void Jump();
+	void DebugMessage(FColor color, FString message);
 
 public:	
 	// Called every frame
