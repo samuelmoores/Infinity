@@ -109,6 +109,7 @@ void APlayerCharacter::LookY(float value)
 void APlayerCharacter::Jump()
 {
 	Super::Jump();
+
 }
 
 void APlayerCharacter::DebugMessage(FColor color, FString message)
