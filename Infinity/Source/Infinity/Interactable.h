@@ -19,6 +19,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class UBoxComponent* BoxCollider;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool canInteract;
+
 	// Sets default values for this actor's properties
 	AInteractable();
 

@@ -29,8 +29,7 @@ AInteractable::AInteractable()
 void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, BoxCollider->Bounds.ToString());
-
+	
 	
 }
 
@@ -46,7 +45,8 @@ void AInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AA
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, "PRESS [E]");
+		
+		canInteract = true;
 
 	}
 
@@ -57,7 +57,7 @@ void AInteractable::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, "Goodbye");
+		canInteract = false;
 
 	}
 }

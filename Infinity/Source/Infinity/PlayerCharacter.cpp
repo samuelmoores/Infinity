@@ -32,6 +32,8 @@ APlayerCharacter::APlayerCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraArm);
 	Camera->bUsePawnControlRotation = false;
+
+	health = 100.0f;
 	
 	
 }
@@ -114,6 +116,27 @@ void APlayerCharacter::DebugMessage(FColor color, FString message)
 
 }
 
+void APlayerCharacter::TakeDamage(float damageAmount)
+{
+	health -= damageAmount;
+}
+
+void APlayerCharacter::Interact()
+{
+	if(!isInteracting)
+	{
+		DebugMessage(FColor::Blue, "Interact");
+		isInteracting = true;
+		
+	}
+	else
+	{
+		DebugMessage(FColor::Red, "Not Interact");
+		isInteracting = false;
+
+	}
+}
+
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
@@ -132,6 +155,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAxis(TEXT("RotationX"), this, &APlayerCharacter::LookX);
 	PlayerInputComponent->BindAxis(TEXT("RotationY"), this, &APlayerCharacter::LookY);
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Interact);
 
 }
 

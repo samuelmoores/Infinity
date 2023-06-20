@@ -35,6 +35,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	float moveSpeed;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isInteracting;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,6 +51,8 @@ protected:
 	void LookY(float value);
 	void Jump();
 	void DebugMessage(FColor color, FString message);
+	void TakeDamage(float damageAmount);
+	void Interact();
 
 public:	
 	// Called every frame
