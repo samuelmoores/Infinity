@@ -125,13 +125,12 @@ void APlayerCharacter::Interact()
 {
 	if(!isInteracting)
 	{
-		DebugMessage(FColor::Blue, "Interact");
 		isInteracting = true;
+
 		
 	}
 	else
 	{
-		DebugMessage(FColor::Red, "Not Interact");
 		isInteracting = false;
 
 	}

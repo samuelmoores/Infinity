@@ -40,6 +40,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isInteracting;
+
+	
 	
 protected:
 	// Called when the game starts or when spawned
@@ -53,6 +55,7 @@ protected:
 	void DebugMessage(FColor color, FString message);
 	void TakeDamage(float damageAmount);
 	void Interact();
+	
 
 public:	
 	// Called every frame

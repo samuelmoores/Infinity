@@ -16,6 +16,8 @@ class INFINITY_API AComputer : public AInteractable
 
 	AComputer();
 
-	
+	void TurnOnScreen();
+
+	virtual void Tick(float DeltaSeconds) override;
 	
 };

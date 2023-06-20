@@ -7,3 +7,19 @@ AComputer::AComputer()
 {
 	
 }
+
+void AComputer::TurnOnScreen()
+{
+	if(canInteract)
+	{
+		Mesh->SetMaterial(1, Mesh->GetEditorMaterial(3));
+	}
+	
+}
+
+void AComputer::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	TurnOnScreen();
+}
