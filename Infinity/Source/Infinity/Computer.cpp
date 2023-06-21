@@ -5,6 +5,8 @@
 
 AComputer::AComputer()
 {
+	bool incrementing = true;
+
 	
 }
 
