@@ -5,6 +5,7 @@
 
 #include "PlayerCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -16,11 +17,11 @@ AInteractable::AInteractable()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
-	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
-	BoxCollider->SetupAttachment(Mesh);
+	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("SphereCollider"));
+	SphereCollider->SetupAttachment(Mesh);
 
-	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &AInteractable::OnOverlapBegin);
-	BoxCollider->OnComponentEndOverlap.AddDynamic(this, &AInteractable::OnOverlapEnd);
+	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &AInteractable::OnOverlapBegin);
+	SphereCollider->OnComponentEndOverlap.AddDynamic(this, &AInteractable::OnOverlapEnd);
 
 	
 }

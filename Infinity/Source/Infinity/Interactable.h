@@ -17,7 +17,7 @@ public:
 	class UStaticMeshComponent* Mesh;
 	
 	UPROPERTY(EditDefaultsOnly)
-	class UBoxComponent* BoxCollider;
+	class USphereComponent* SphereCollider;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool canInteract;
