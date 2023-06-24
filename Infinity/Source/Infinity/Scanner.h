@@ -4,21 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Interactable.h"
-#include "Computer.generated.h"
+#include "Scanner.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class INFINITY_API AComputer : public AInteractable
+class INFINITY_API AScanner : public AInteractable
 {
 	GENERATED_BODY()
 
-	AComputer();
-
 	UFUNCTION(BlueprintCallable)
-	void TurnOnScreen();
-
-	virtual void Tick(float DeltaSeconds) override;
+	void TurnOnScreen(bool canEnter);
 	
 };

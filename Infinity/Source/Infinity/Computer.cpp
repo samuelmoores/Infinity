@@ -23,5 +23,4 @@ void AComputer::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	TurnOnScreen();
 }

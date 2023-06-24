@@ -41,8 +41,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isInteracting;
 
-	
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool canInteract;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
