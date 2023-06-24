@@ -116,11 +116,6 @@ void APlayerCharacter::DebugMessage(FColor color, FString message)
 
 }
 
-void APlayerCharacter::TakeDamage(float damageAmount)
-{
-	health -= damageAmount;
-}
-
 void APlayerCharacter::Interact()
 {
 	if(!isInteracting)

@@ -53,7 +53,6 @@ protected:
 	void LookY(float value);
 	void Jump();
 	void DebugMessage(FColor color, FString message);
-	void TakeDamage(float damageAmount);
 	void Interact();
 	
 
