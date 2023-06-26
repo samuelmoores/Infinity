@@ -30,6 +30,8 @@ AInteractable::AInteractable()
 void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
 	
 }
@@ -46,8 +48,12 @@ void AInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AA
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		
-		canInteract = true;
+		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+
+		if(PlayerCharacter)	
+		{	
+			PlayerCharacter->canInteract = true;
+		}
 
 	}
 
@@ -58,8 +64,12 @@ void AInteractable::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		canInteract = false;
-
+		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+		if(PlayerCharacter)
+		{
+			PlayerCharacter->canInteract = false;
+			PlayerCharacter->isInteracting = false;
+		}
 	}
 }
 

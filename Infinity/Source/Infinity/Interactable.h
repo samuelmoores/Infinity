@@ -19,8 +19,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	class USphereComponent* SphereCollider;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool canInteract;
+	class APlayerCharacter* PlayerCharacter;
 
 	// Sets default values for this actor's properties
 	AInteractable();

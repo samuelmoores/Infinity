@@ -12,10 +12,7 @@ AComputer::AComputer()
 
 void AComputer::TurnOnScreen()
 {
-	if(canInteract)
-	{
-		Mesh->SetMaterial(1, Mesh->GetEditorMaterial(3));
-	}
+	
 	
 }
 
