@@ -21,6 +21,9 @@ public:
 
 	class APlayerCharacter* PlayerCharacter;
 
+	UPROPERTY(BlueprintReadOnly)
+	bool interact;
+
 	// Sets default values for this actor's properties
 	AInteractable();
 

@@ -34,6 +34,8 @@ APlayerCharacter::APlayerCharacter()
 	Camera->bUsePawnControlRotation = false;
 
 	health = 100.0f;
+
+	hasKeycard = false;
 	
 	
 }
@@ -118,7 +120,7 @@ void APlayerCharacter::DebugMessage(FColor color, FString message)
 
 void APlayerCharacter::Interact()
 {
-	if(!isInteracting)
+	if(!isInteracting && canInteract)
 	{
 		isInteracting = true;
 

@@ -49,10 +49,13 @@ void AInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AA
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+		
 
 		if(PlayerCharacter)	
-		{	
+		{
 			PlayerCharacter->canInteract = true;
+			interact = true;
+
 		}
 
 	}
@@ -67,8 +70,10 @@ void AInteractable::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
 		if(PlayerCharacter)
 		{
+
 			PlayerCharacter->canInteract = false;
 			PlayerCharacter->isInteracting = false;
+			interact = false;
 		}
 	}
 }

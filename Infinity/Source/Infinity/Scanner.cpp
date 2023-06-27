@@ -27,6 +27,9 @@ void AScanner::BeginPlay()
 
 	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass()));
 
+	if(PlayerCharacter)
+	{
+	}
 
 }
 
@@ -40,7 +43,6 @@ void AScanner::TurnOnScreen(bool canEnter)
 	if(canEnter)
 	{
 		Mesh->SetMaterial(0, Mesh->GetMaterial(4));
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "You no enter");
 		
 	}
 	else
@@ -77,10 +79,23 @@ void AScanner::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 
 void AScanner::OpenDoor()
 {
+
 	if(PlayerCharacter->isInteracting && PlayerCharacter->canInteract)
 	{
-		Door->Open();
+		if(PlayerCharacter->hasKeycard)
+		{
+			TurnOnScreen(PlayerCharacter->hasKeycard);
+			Door->Open();
+			
+		}
+		else
+		{
+			TurnOnScreen(PlayerCharacter->hasKeycard);
+			
+		}
+
 		PlayerCharacter->isInteracting = false;
+
 	}
 }
 

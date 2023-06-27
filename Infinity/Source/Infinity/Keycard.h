@@ -4,44 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "Interactable.h"
-#include "Door.generated.h"
+#include "Keycard.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class INFINITY_API ADoor : public AInteractable
+class INFINITY_API AKeycard : public AInteractable
 {
 	GENERATED_BODY()
-
-	bool isOpen;
-	bool opening;
-	bool isClosed;
-	bool closing;
-	FVector OpenLocation;
-	FVector ClosedLocation;
-	FVector CurrentLocation;
-
-	float timeElapsed;
-	float deltaTime;
-	float InterpSpeed;
+public:
+	class APlayerCharacter* PlayerCharacter;
 
 	FTimerHandle TimerHandle;
 
-	void Door();
+	AKeycard();
 
 	void BeginPlay() override;
 
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
 
-public:
-	UFUNCTION(BlueprintCallable)
-	void Open();
-
-	FString num;
+	void TakeCard();
 	
-	void MoveDoor();
-
-
 };
-

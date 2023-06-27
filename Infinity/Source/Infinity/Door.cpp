@@ -15,12 +15,23 @@ void ADoor::BeginPlay()
 	isOpen = false;
 	ClosedLocation = GetActorLocation();
 	InterpSpeed = 1.0f;
-	OpenLocation = GetActorLocation() + FVector(0.0, -290.0f, 0.0f);
+	OpenLocation = GetActorLocation() + FVector(0.0f, 0.0f, -300.0f);
 
 	deltaTime = 0.0167;
 	timeElapsed = 0.0f;
 
 
+}
+
+void ADoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
+
+	if(Cast<APlayerCharacter>(OtherActor))
+	{
+		Open();
+	}
 }
 
 void ADoor::Door()
@@ -34,6 +45,8 @@ void ADoor::Door()
 void ADoor::Open()
 {
 	CurrentLocation = GetActorLocation();
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "Door->Open");
+
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADoor::MoveDoor, GetWorld()->GetDeltaSeconds(), true);
 
 }

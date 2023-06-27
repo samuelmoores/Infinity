@@ -20,5 +20,7 @@ class INFINITY_API AComputer : public AInteractable
 	void TurnOnScreen();
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
 	
 };
