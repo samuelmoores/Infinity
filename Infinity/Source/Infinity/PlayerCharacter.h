@@ -29,6 +29,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	class UInputAction* LookAction;
 
+	FTimerHandle Timer;
+
 	UPROPERTY(EditAnywhere)
 	float rotationSpeed;
 
@@ -46,6 +48,11 @@ public:
 
 	bool hasKeycard;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool attack;
+
+	float attackCooldown;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,6 +64,8 @@ protected:
 	void Jump();
 	void DebugMessage(FColor color, FString message);
 	void Interact();
+	void Attack();
+	void AttackCoolDown();
 	
 
 public:	

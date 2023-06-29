@@ -74,6 +74,8 @@ void AScanner::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 	int32 OtherBodyIndex)
 {
 	Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
+	playerOverlapped = false;
+
 }
 
 

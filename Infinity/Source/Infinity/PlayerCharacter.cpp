@@ -36,8 +36,26 @@ APlayerCharacter::APlayerCharacter()
 	health = 100.0f;
 
 	hasKeycard = false;
+
+	attackCooldown = 0.67f;
 	
 	
+}
+
+
+// Called to bind functionality to input
+void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &APlayerCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(TEXT("RotationX"), this, &APlayerCharacter::LookX);
+	PlayerInputComponent->BindAxis(TEXT("RotationY"), this, &APlayerCharacter::LookY);
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Interact);
+	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Pressed, this, &APlayerCharacter::Attack);
+
 }
 
 // Called when the game starts or when spawned
@@ -47,6 +65,15 @@ void APlayerCharacter::BeginPlay()
 
 
 }
+
+
+// Called every frame
+void APlayerCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 
 void APlayerCharacter::MoveForward(float value)
 {
@@ -71,8 +98,8 @@ void APlayerCharacter::MoveRight(float value)
 		const FRotator Rotation = Camera->GetComponentRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get right vector that will rotate the player by however many degrees the camera just rotated
-		// to align with the y-axis which is pointing to the right
+		// get right vector that will rotate the player around z axis, 90 deg from the camera
+		// to point along the y-axis which is pointing to the right(+) or left(-)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// Rotate and move the player to align with their local y-axis which would be toward the right of the camera 
@@ -133,26 +160,18 @@ void APlayerCharacter::Interact()
 	}
 }
 
-// Called every frame
-void APlayerCharacter::Tick(float DeltaTime)
+void APlayerCharacter::Attack()
 {
-	Super::Tick(DeltaTime);
-
+	attack = true;
+	
 }
 
-// Called to bind functionality to input
-void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void APlayerCharacter::AttackCoolDown()
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &APlayerCharacter::MoveForward);
-	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &APlayerCharacter::MoveRight);
-	PlayerInputComponent->BindAxis(TEXT("RotationX"), this, &APlayerCharacter::LookX);
-	PlayerInputComponent->BindAxis(TEXT("RotationY"), this, &APlayerCharacter::LookY);
-	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Interact);
-
+	
+	
 }
+
 
 
 

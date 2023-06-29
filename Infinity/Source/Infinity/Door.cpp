@@ -45,8 +45,7 @@ void ADoor::Door()
 void ADoor::Open()
 {
 	CurrentLocation = GetActorLocation();
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "Door->Open");
-
+	
 	GetWorldTimerManager().SetTimer(TimerHandle, this, &ADoor::MoveDoor, GetWorld()->GetDeltaSeconds(), true);
 
 }
