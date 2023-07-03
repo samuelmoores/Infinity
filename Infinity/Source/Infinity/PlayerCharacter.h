@@ -23,6 +23,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	class USpringArmComponent* CameraArm;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	class USphereComponent* HandCollision;
+
 	UPROPERTY(EditAnywhere)
 	class UInputMappingContext* PlayerInput;
 
@@ -52,6 +55,8 @@ public:
 	bool attack;
 
 	float attackCooldown;
+	bool overlappingEnemy;
+	class AEnemy* Enemy;
 
 protected:
 	// Called when the game starts or when spawned
@@ -66,6 +71,9 @@ protected:
 	void Interact();
 	void Attack();
 	void AttackCoolDown();
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void NotifyActorEndOverlap(AActor* OtherActor) override;
+	
 	
 
 public:	
@@ -74,5 +82,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	
 
 };

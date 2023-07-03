@@ -2,11 +2,14 @@
 
 
 #include "PlayerCharacter.h"
+
+#include "Enemy.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -33,12 +36,14 @@ APlayerCharacter::APlayerCharacter()
 	Camera->SetupAttachment(CameraArm);
 	Camera->bUsePawnControlRotation = false;
 
-	health = 100.0f;
+	HandCollision = CreateDefaultSubobject<USphereComponent>(TEXT("HandCollider"));
+	HandCollision->SetupAttachment(GetMesh(), "hand_r_SOC");
 
+	health = 1.0f;
 	hasKeycard = false;
-
 	attackCooldown = 0.67f;
-	
+	overlappingEnemy = false;
+
 	
 }
 
@@ -62,6 +67,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	Enemy = Cast<AEnemy>(UGameplayStatics::GetActorOfClass(GetWorld(), AEnemy::StaticClass()));
+
 
 
 }
@@ -141,7 +148,7 @@ void APlayerCharacter::Jump()
 
 void APlayerCharacter::DebugMessage(FColor color, FString message)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, color, message);
+	GEngine->AddOnScreenDebugMessage(-1, 0.5f, color, message);
 
 }
 
@@ -163,13 +170,46 @@ void APlayerCharacter::Interact()
 void APlayerCharacter::Attack()
 {
 	attack = true;
+
+	GetWorldTimerManager().SetTimer(Timer, this, &APlayerCharacter::AttackCoolDown, GetWorld()->GetDeltaSeconds(), true);
 	
 }
 
 void APlayerCharacter::AttackCoolDown()
 {
+	attackCooldown -= GetWorld()->GetDeltaSeconds();
+
+	if(overlappingEnemy)
+	{
+		if(Enemy)
+		{
+			Enemy->TakeDamage(0.01f);
+			
+		}
+
+	}
+	
+	if(attackCooldown <= 0)
+	{
+		GetWorldTimerManager().ClearTimer(Timer);
+		attackCooldown = 0.67f;
+		attack = false;
+	}
+	
+}
+
+void APlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
 	
 	
+}
+
+void APlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+
+	
+
 }
 
 
