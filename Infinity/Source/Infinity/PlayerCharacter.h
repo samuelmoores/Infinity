@@ -34,6 +34,8 @@ public:
 
 	FTimerHandle Timer;
 
+	class AHitBox* Hitbox;
+
 	UPROPERTY(EditAnywhere)
 	float rotationSpeed;
 
@@ -54,9 +56,17 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool attack;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool hit;
+
+
 	float attackCooldown;
 	bool overlappingEnemy;
 	class AEnemy* Enemy;
+
+	UFUNCTION(BlueprintCallable)
+	void TakeDamage(float damageAmount);
+
 
 protected:
 	// Called when the game starts or when spawned

@@ -18,7 +18,7 @@ AEnemy::AEnemy()
 	HandCollider->SetupAttachment(GetMesh(), "hand_r_SOC");
 
 	attackCoolDown = 1.0f;
-	overlappingEnemy = false;
+	hit = false;
 	attacking = false;
 	health = 1.0f;
 	isBlocking = false;
@@ -27,7 +27,6 @@ AEnemy::AEnemy()
 
 void AEnemy::TakeDamage(float damageAmount)
 {
-	FString mes = FString::SanitizeFloat(health);
 	
 	
 	if(health <= 0.0f)
@@ -43,7 +42,6 @@ void AEnemy::TakeDamage(float damageAmount)
 		health -= damageAmount;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, mes);
 }
 
 float AEnemy::SetHealthBar()
@@ -57,6 +55,8 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 	PlayerCharacer = Cast<APlayerCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass()));
 
+
+
 	
 }
 
@@ -66,14 +66,21 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if(OtherActor->ActorHasTag("Hitbox"))
 	{
-		overlappingEnemy = true;
+		hit = true;
 	}
+
+	
 	
 }
 
 void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
+
+	if(OtherActor->ActorHasTag("Hitbox"))
+	{
+		hit = false;
+	}
 	
 }
 
@@ -93,7 +100,10 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AEnemy::Attack()
 {
+
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "Attack");
 	
+	attacking = true;
 	
 }
 

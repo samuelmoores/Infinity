@@ -27,10 +27,18 @@ protected:
 
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
+
+	UFUNCTION(BlueprintCallable)
 	void Attack();
 
 	UPROPERTY(BlueprintReadOnly)
 	bool isBlocking;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool hit;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool attacking;
 
 
 public:	
@@ -47,11 +55,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 	class USphereComponent* HandCollider;
-	
+
 	FTimerHandle Timer;
 	float attackCoolDown;
-	bool attacking;
-	bool overlappingEnemy;
+
 	float health;
 
 };

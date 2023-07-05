@@ -37,6 +37,11 @@ void AHitBox::NotifyActorEndOverlap(AActor* OtherActor)
 
 }
 
+EHitboxEnum AHitBox::getType()
+{
+	return hitboxType;
+}
+
 // Called when the game starts or when spawned
 void AHitBox::BeginPlay()
 {

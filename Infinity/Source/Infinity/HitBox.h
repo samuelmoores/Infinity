@@ -26,6 +26,9 @@ public:
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
 
+	UFUNCTION(BlueprintCallable)
+	EHitboxEnum getType();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	EHitboxEnum hitboxType;
 
@@ -42,5 +45,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+
 
 };

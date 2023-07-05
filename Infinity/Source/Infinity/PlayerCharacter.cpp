@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
+#include "HitBox.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -78,6 +79,8 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+
 
 }
 
@@ -200,6 +203,10 @@ void APlayerCharacter::AttackCoolDown()
 
 void APlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
+	if(OtherActor->ActorHasTag("HitboxEnemy") && !attack)
+	{
+		hit = true;
+	}
 	
 	
 }
@@ -208,8 +215,17 @@ void APlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
 
-	
+	if(OtherActor->ActorHasTag("HitboxEnemy") && !attack)
+	{
+		hit = false;
+	}
 
+
+}
+
+void APlayerCharacter::TakeDamage(float damageAmount)
+{
+	health -= damageAmount;
 }
 
 
