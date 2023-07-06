@@ -56,7 +56,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool attack;
 
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite) 
 	bool hit;
 
 

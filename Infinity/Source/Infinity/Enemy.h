@@ -31,14 +31,20 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void Attack();
 
+	UFUNCTION(BlueprintCallable)
+	void Death();
+
 	UPROPERTY(BlueprintReadOnly)
 	bool isBlocking;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadWrite)
 	bool hit;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool attacking;
+
+	UPROPERTY(BlueprintReadWrite)
+	bool isDead;
 
 
 public:	
@@ -60,5 +66,6 @@ private:
 	float attackCoolDown;
 
 	float health;
+	float destroyLifetime;
 
 };

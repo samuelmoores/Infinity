@@ -22,16 +22,23 @@ AEnemy::AEnemy()
 	attacking = false;
 	health = 1.0f;
 	isBlocking = false;
+	isDead = false;
+	destroyLifetime = 5.0f;
 
 }
 
 void AEnemy::TakeDamage(float damageAmount)
 {
+
 	
-	
-	if(health <= 0.0f)
+	if(health < 0.1f)
 	{
 		health = 0.0f;
+		FString num = FString::SanitizeFloat(health);
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, num);
+
+		isDead = true;
+		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
 		
 	}else if(health > 1.0f)
 	{
@@ -40,6 +47,9 @@ void AEnemy::TakeDamage(float damageAmount)
 	else
 	{
 		health -= damageAmount;
+		FString num = FString::SanitizeFloat(health);
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, num);
+
 	}
 
 }
@@ -105,6 +115,17 @@ void AEnemy::Attack()
 	
 	attacking = true;
 	
+}
+
+void AEnemy::Death()
+{
+	destroyLifetime -= GetWorld()->GetDeltaSeconds();
+
+	if(destroyLifetime <= 0.0f)
+	{
+		Destroy();
+		GetWorldTimerManager().ClearTimer(Timer);
+	}
 }
 
 
