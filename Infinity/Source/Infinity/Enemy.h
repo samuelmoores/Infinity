@@ -59,13 +59,12 @@ private:
 
 	class AHitBox* Hitbox;
 
-	UPROPERTY(EditDefaultsOnly)
-	class USphereComponent* HandCollider;
 
 	FTimerHandle Timer;
 	float attackCoolDown;
-
 	float health;
+
+	//time after enemy dies and the object is destroyed
 	float destroyLifetime;
 
 };

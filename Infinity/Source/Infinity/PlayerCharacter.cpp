@@ -17,7 +17,7 @@
 APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
@@ -44,8 +44,8 @@ APlayerCharacter::APlayerCharacter()
 	hasKeycard = false;
 	attackCooldown = 0.67f;
 	overlappingEnemy = false;
+	hit = false;
 
-	
 }
 
 
@@ -61,6 +61,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Interact"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Interact);
 	PlayerInputComponent->BindAction(TEXT("Attack"), IE_Pressed, this, &APlayerCharacter::Attack);
+	PlayerInputComponent->BindAction(TEXT("Dodge"), EInputEvent::IE_Pressed, this, &APlayerCharacter::Dodge);
+
 
 }
 
@@ -80,29 +82,33 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
+	
 
 }
 
 
 void APlayerCharacter::MoveForward(float value)
 {
-	// Get how much the camera rotated and zero out pitch and roll
-	const FRotator CameraRotation = Camera->GetComponentRotation();
-	const FRotator ControlRotation(0, CameraRotation.Yaw, 0);
 
-	// Get forward vector that will rotate the player by however many degrees the camera just rotated
-	// to align with the x-axis which is pointing forward
-	const FVector ForwardDirection = FRotationMatrix(ControlRotation).GetUnitAxis(EAxis::X);
+	if(!isDead && !hit)
+	{
+		// Get how much the camera rotated and zero out pitch and roll
+		const FRotator CameraRotation = Camera->GetComponentRotation();
+		const FRotator ControlRotation(0, CameraRotation.Yaw, 0);
 
-	// Rotate the player by however many degrees the camera rotated and move along the x axis
-	AddMovementInput(ForwardDirection, value * moveSpeed);
+		// Get forward vector that will rotate the player by however many degrees the camera just rotated
+		// to align with the x-axis which is pointing forward
+		const FVector ForwardDirection = FRotationMatrix(ControlRotation).GetUnitAxis(EAxis::X);
 
+		// Rotate the player by however many degrees the camera rotated and move along the x axis
+		AddMovementInput(ForwardDirection, value * moveSpeed);
+	}
+	
 }
 
 void APlayerCharacter::MoveRight(float value)
 {
-	if (Controller != nullptr)
+	if (Controller != nullptr && !isDead && !hit)
 	{
 		// find out how much the camera rotated and zero out the pitch and the roll
 		const FRotator Rotation = Camera->GetComponentRotation();
@@ -122,7 +128,7 @@ void APlayerCharacter::LookX(float value)
 
 	FRotator NewRotation = CameraArm->GetComponentRotation();
 	
-	NewRotation.Yaw += value; // Adjust RotationSpeed to control the rotation speed
+	NewRotation.Yaw += value * 2.0f; // Adjust RotationSpeed to control the rotation speed
 
 	//DebugMessage(FColor::Yellow, NewRotation.ToString());
 
@@ -135,7 +141,7 @@ void APlayerCharacter::LookX(float value)
 void APlayerCharacter::LookY(float value)
 {
 	FRotator NewRotation = CameraArm->GetComponentRotation();
-	NewRotation.Pitch += value; // Adjust RotationSpeed to control the rotation speed
+	NewRotation.Pitch += value * 2.0f; // Adjust RotationSpeed to control the rotation speed
 	
 	CameraArm->SetWorldRotation(NewRotation);
 
@@ -201,6 +207,12 @@ void APlayerCharacter::AttackCoolDown()
 	
 }
 
+void APlayerCharacter::Dodge()
+{
+	isDodging = true;
+	
+}
+
 void APlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	if(OtherActor->ActorHasTag("HitboxEnemy") && !attack)
@@ -225,7 +237,19 @@ void APlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 
 void APlayerCharacter::TakeDamage(float damageAmount)
 {
-	health -= damageAmount;
+	if(health < 0.10f)
+	{
+		health = 0.0f;
+		isDead = true;
+	}else if(health > 1.0f)
+	{
+		health = 1.0f;
+	}
+	else
+	{
+		hit = true;
+		health -= damageAmount;
+	}
 }
 
 

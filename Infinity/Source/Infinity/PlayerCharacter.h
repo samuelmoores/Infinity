@@ -59,7 +59,12 @@ public:
 	UPROPERTY(BlueprintReadWrite) 
 	bool hit;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool isDead;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool isDodging;
+	
 	float attackCooldown;
 	bool overlappingEnemy;
 	class AEnemy* Enemy;
@@ -81,6 +86,7 @@ protected:
 	void Interact();
 	void Attack();
 	void AttackCoolDown();
+	void Dodge();
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
 	
@@ -93,6 +99,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FVector force;
 	
 
 };

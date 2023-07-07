@@ -6,16 +6,14 @@
 #include "HitBox.h"
 #include "PlayerCharacter.h"
 #include "Components/SphereComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AEnemy::AEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	HandCollider = CreateDefaultSubobject<USphereComponent>(TEXT("HandCollider"));
-	HandCollider->SetupAttachment(GetMesh(), "hand_r_SOC");
+	PrimaryActorTick.bCanEverTick = false;
 
 	attackCoolDown = 1.0f;
 	hit = false;
@@ -35,7 +33,6 @@ void AEnemy::TakeDamage(float damageAmount)
 	{
 		health = 0.0f;
 		FString num = FString::SanitizeFloat(health);
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, num);
 
 		isDead = true;
 		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
@@ -48,7 +45,6 @@ void AEnemy::TakeDamage(float damageAmount)
 	{
 		health -= damageAmount;
 		FString num = FString::SanitizeFloat(health);
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, num);
 
 	}
 
@@ -112,8 +108,16 @@ void AEnemy::Attack()
 {
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "Attack");
-	
-	attacking = true;
+
+	if(!PlayerCharacer->isDead)
+	{
+		attacking = true;
+		
+	}
+	else
+	{
+		attacking = false;
+	}
 	
 }
 
