@@ -1,8 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InfinityGameMode.h"
-#include "InfinityCharacter.h"
-#include "PlayerCharacter.h"
 #include "GameFramework/DefaultPawn.h"
 #include "UObject/ConstructorHelpers.h"
 

@@ -4,7 +4,6 @@
 #include "Enemy.h"
 
 #include "HitBox.h"
-#include "PlayerCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -59,11 +58,7 @@ float AEnemy::SetHealthBar()
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerCharacer = Cast<APlayerCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass()));
 
-
-
-	
 }
 
 void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -109,15 +104,6 @@ void AEnemy::Attack()
 
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "Attack");
 
-	if(!PlayerCharacer->isDead)
-	{
-		attacking = true;
-		
-	}
-	else
-	{
-		attacking = false;
-	}
 	
 }
 

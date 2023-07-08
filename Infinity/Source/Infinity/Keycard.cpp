@@ -3,7 +3,6 @@
 
 #include "Keycard.h"
 
-#include "PlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
 AKeycard::AKeycard()
@@ -15,11 +14,6 @@ void AKeycard::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if(GetWorld())
-	{
-		PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-		
-	}
 
 }
 
@@ -41,10 +35,5 @@ void AKeycard::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 
 void AKeycard::TakeCard()
 {
-	if(PlayerCharacter->isInteracting)
-	{
-		PlayerCharacter->hasKeycard = true;
-		GetWorldTimerManager().ClearTimer(TimerHandle);
-		Destroy();
-	}
+	
 }

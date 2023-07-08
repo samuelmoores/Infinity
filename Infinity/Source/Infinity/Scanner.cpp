@@ -25,7 +25,6 @@ void AScanner::BeginPlay()
 		}
 	}
 
-	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), APlayerCharacter::StaticClass()));
 
 	if(PlayerCharacter)
 	{
@@ -57,16 +56,7 @@ void AScanner::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Other
 {
 	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
-	if(Cast<APlayerCharacter>(OtherActor))
-	{
-		
-		if(FVector::Distance(GetActorLocation(), OtherActor->GetActorLocation()) < 250.0f)
-		{
-			playerOverlapped = true;
-			GetWorldTimerManager().SetTimer(TimerHandle, this, &AScanner::OpenDoor, GetWorld()->GetDeltaSeconds(), true);
-			
-		}
-	}
+	
 	
 }
 
@@ -82,23 +72,7 @@ void AScanner::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherAc
 void AScanner::OpenDoor()
 {
 
-	if(PlayerCharacter->isInteracting && PlayerCharacter->canInteract)
-	{
-		if(PlayerCharacter->hasKeycard)
-		{
-			TurnOnScreen(PlayerCharacter->hasKeycard);
-			Door->Open();
-			
-		}
-		else
-		{
-			TurnOnScreen(PlayerCharacter->hasKeycard);
-			
-		}
-
-		PlayerCharacter->isInteracting = false;
-
-	}
+	
 }
 
 

@@ -4,7 +4,7 @@
 #include "Pistol.h"
 
 
-#include "PlayerCharacter.h"
+#include "InfinityCharacter.h"
 #include "VectorTypes.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -24,8 +24,6 @@ APistol::APistol()
 	offset = 1;
 	attachedToPlayer = false;
 
-
-
 }
 
 void APistol::AttachToPlayer()
@@ -43,36 +41,40 @@ void APistol::BeginPlay()
 void APistol::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-if(!attachedToPlayer)
-{
-	FVector NewLocation = FMath::Lerp(GetActorLocation(), GetActorLocation() + FVector(0.0f, 0.0f, 100.0f * offset), DeltaTime);
-	Mesh->SetWorldLocation(NewLocation);
 
-	if(GetActorLocation().Z >= 225.0f)
+	//Weapon hovers up and down in the level before being picked up
+	if(!attachedToPlayer)
 	{
-		offset = -1;
-		
-	}else if(GetActorLocation().Z <= 175.0f)
-	{
-		offset = 1;
+		//Linear Interpolate up and down at a rate of 100
+		FVector NewLocation = FMath::Lerp(GetActorLocation(), GetActorLocation() + FVector(0.0f, 0.0f, 100.0f * offset), DeltaTime);
+		Mesh->SetWorldLocation(NewLocation);
+
+		//Mesh hovers up and down by 50.0 units
+		if(GetActorLocation().Z >= 225.0f)
+		{
+			offset = -1;
+		}else if(GetActorLocation().Z <= 175.0f)
+		{
+			offset = 1;
+		}
 	}
-}
-	
-
 }
 
 void APistol::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
+	//Check for player collision
 	if(OtherActor->ActorHasTag("Player"))
 	{
-		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
+		PlayerCharacter = Cast<AInfinityCharacter>(OtherActor);
 
 		if(PlayerCharacter)
 		{
+			//Attach pistol to player's hand
+			AttachToComponent(PlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
 			attachedToPlayer = true;
-			AttachToComponent(PlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");	
+			PlayerCharacter->hasWeapon = true;
 		}
 		
 	}

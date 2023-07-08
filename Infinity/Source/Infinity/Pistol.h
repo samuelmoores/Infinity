@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PlayerCharacter.h"
 #include "Pistol.generated.h"
 
 UCLASS()
@@ -18,8 +17,8 @@ class INFINITY_API APistol : public AActor
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* BoxCollider;
 
-	APlayerCharacter* PlayerCharacter;
-
+	class AInfinityCharacter* PlayerCharacter;
+	
 	int offset;
 	bool attachedToPlayer;
 

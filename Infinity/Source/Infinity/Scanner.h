@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Interactable.h"
-#include "PlayerCharacter.h"
 #include "Scanner.generated.h"
 
 /**

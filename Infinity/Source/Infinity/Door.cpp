@@ -3,7 +3,6 @@
 
 #include "Door.h"
 
-#include "PlayerCharacter.h"
 #include "VectorTypes.h"
 #include "Components/SphereComponent.h"
 #include "Math/UnitConversion.h"
@@ -28,10 +27,7 @@ void ADoor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherAct
 {
 	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 
-	if(Cast<APlayerCharacter>(OtherActor))
-	{
-		Open();
-	}
+	
 }
 
 void ADoor::Door()

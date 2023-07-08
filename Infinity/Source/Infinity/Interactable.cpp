@@ -3,8 +3,6 @@
 
 #include "Interactable.h"
 
-#include "PlayerCharacter.h"
-#include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -31,7 +29,6 @@ void AInteractable::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerCharacter = Cast<APlayerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
 	
 }
@@ -48,15 +45,7 @@ void AInteractable::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, class AA
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
 		
-
-		if(PlayerCharacter)	
-		{
-			PlayerCharacter->canInteract = true;
-			interact = true;
-
-		}
 
 	}
 
@@ -67,14 +56,7 @@ void AInteractable::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		PlayerCharacter = Cast<APlayerCharacter>(OtherActor);
-		if(PlayerCharacter)
-		{
-
-			PlayerCharacter->canInteract = false;
-			PlayerCharacter->isInteracting = false;
-			interact = false;
-		}
+		
 	}
 }
 

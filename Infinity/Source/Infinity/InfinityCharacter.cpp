@@ -49,6 +49,9 @@ AInfinityCharacter::AInfinityCharacter()
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	//Player does not start with a weapon
+	hasWeapon = false;
 }
 
 void AInfinityCharacter::BeginPlay()
@@ -83,6 +86,10 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AInfinityCharacter::Look);
+
+		//Aiming
+		PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AInfinityCharacter::StartAim);
+		PlayerInputComponent->BindAction("Aim", IE_Released, this, &AInfinityCharacter::StopAim);
 
 	}
 
@@ -122,6 +129,28 @@ void AInfinityCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AInfinityCharacter::StartAim()
+{
+	aiming = true;
+	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
+	CameraBoom->TargetArmLength = 100.0f;
+	CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 15.0f);
+	FollowCamera->bUsePawnControlRotation = true;
+	GetCharacterMovement()->bOrientRotationToMovement = false;
+	bUseControllerRotationYaw = true;
+}
+
+void AInfinityCharacter::StopAim()
+{
+	aiming = false;
+	GetCharacterMovement()->MaxWalkSpeed = 500.0f;
+	CameraBoom->TargetArmLength = 400.0f;
+	CameraBoom->SocketOffset = FVector(0.0f, 0.0f, 0.0f);
+	FollowCamera->bUsePawnControlRotation = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	bUseControllerRotationYaw = false;
 }
 
 

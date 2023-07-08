@@ -43,8 +43,15 @@ class AInfinityCharacter : public ACharacter
 
 public:
 	AInfinityCharacter();
-	
 
+	/** Does Player Have Weapon */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	bool hasWeapon;
+
+	/** Is Player aiming */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	bool aiming;
+	
 protected:
 
 	/** Called for movement input */
@@ -52,6 +59,9 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void StartAim();
+	void StopAim();
 			
 
 protected:
