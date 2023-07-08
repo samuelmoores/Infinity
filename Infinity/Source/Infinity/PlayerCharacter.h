@@ -89,8 +89,7 @@ protected:
 	void Dodge();
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
-	
-	
+
 
 public:	
 	// Called every frame
@@ -103,3 +102,9 @@ public:
 	
 
 };
+
+
+
+
+
+

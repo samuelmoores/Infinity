@@ -219,8 +219,7 @@ void APlayerCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		hit = true;
 	}
-	
-	
+
 }
 
 void APlayerCharacter::NotifyActorEndOverlap(AActor* OtherActor)
