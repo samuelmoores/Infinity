@@ -63,6 +63,10 @@ public:
 	/** Is Player aiming */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	bool aiming;
+
+	/** Is player shooting, must be switched off with anim notify once shooting animation ends*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	bool shooting;
 	
 protected:
 
@@ -78,6 +82,7 @@ protected:
 
 	/** Shooting */
 	void Shoot();
+	void StopShoot();
 			
 
 protected:

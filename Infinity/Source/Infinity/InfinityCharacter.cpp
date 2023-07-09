@@ -57,6 +57,9 @@ AInfinityCharacter::AInfinityCharacter()
 	//Player does not start with a weapon
 	hasWeapon = false;
 
+	//Initialize shooting boolean
+	shooting = false;
+
 	//Set Particle System
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> SparksFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
 
@@ -103,6 +106,8 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 		//Shooting
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AInfinityCharacter::Shoot);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &AInfinityCharacter::StopShoot);
+
 
 		//Aiming
 		PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AInfinityCharacter::StartAim);
@@ -174,6 +179,7 @@ void AInfinityCharacter::Shoot()
 {
 	if(aiming && hasWeapon)
 	{
+		shooting = true;
 		FVector StartLocation = FollowCamera->GetComponentLocation(); 
 		FVector ShotLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
 		FHitResult Hit;
@@ -194,6 +200,13 @@ void AInfinityCharacter::Shoot()
 			}	
 		}
 	}
+
+}
+
+void AInfinityCharacter::StopShoot()
+{
+	shooting = false;
+
 }
 
 

@@ -30,7 +30,7 @@ class INFINITY_API APistol : public AActor
 public:
 
 	//Player reference for attachment
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	class AInfinityCharacter* PlayerCharacter;
 	
 	// Sets default values for this actor's properties
