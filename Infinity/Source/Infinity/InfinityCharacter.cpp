@@ -134,9 +134,9 @@ void AInfinityCharacter::Look(const FInputActionValue& Value)
 void AInfinityCharacter::StartAim()
 {
 	aiming = true;
-	GetCharacterMovement()->MaxWalkSpeed = 250.0f;
-	CameraBoom->TargetArmLength = 100.0f;
-	CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 15.0f);
+	GetCharacterMovement()->MaxWalkSpeed = 150.0f;
+	CameraBoom->TargetArmLength = 75.0f;
+	CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 25.0f);
 	FollowCamera->bUsePawnControlRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	bUseControllerRotationYaw = true;
