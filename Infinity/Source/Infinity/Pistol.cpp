@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Pistol.h"
 
 
@@ -26,10 +25,6 @@ APistol::APistol()
 
 }
 
-void APistol::AttachToPlayer()
-{
-}
-
 // Called when the game starts or when spawned
 void APistol::BeginPlay()
 {
@@ -43,6 +38,19 @@ void APistol::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//Weapon hovers up and down in the level before being picked up
+	Hover(DeltaTime);
+}
+
+void APistol::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
+{
+	//Get the players mesh to access the hand socket and snap the pistol actor to it
+	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
+	attachedToPlayer = true;
+	AttachPlayerCharacter->hasWeapon = true;
+}
+
+void APistol::Hover(float DeltaTime)
+{
 	if(!attachedToPlayer)
 	{
 		//Linear Interpolate up and down at a rate of 100
@@ -71,10 +79,7 @@ void APistol::NotifyActorBeginOverlap(AActor* OtherActor)
 
 		if(PlayerCharacter)
 		{
-			//Attach pistol to player's hand
-			AttachToComponent(PlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
-			attachedToPlayer = true;
-			PlayerCharacter->hasWeapon = true;
+			AttachToPlayer(PlayerCharacter);
 		}
 		
 	}

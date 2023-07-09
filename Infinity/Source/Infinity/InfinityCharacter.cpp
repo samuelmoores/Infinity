@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InfinityCharacter.h"
+
+#include "Enemy.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -9,6 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -52,6 +56,16 @@ AInfinityCharacter::AInfinityCharacter()
 
 	//Player does not start with a weapon
 	hasWeapon = false;
+
+	//Set Particle System
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> SparksFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
+
+	if(SparksFinder.Succeeded())
+	{
+		Sparks = SparksFinder.Object;
+	}
+	
+
 }
 
 void AInfinityCharacter::BeginPlay()
@@ -86,6 +100,9 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AInfinityCharacter::Look);
+
+		//Shooting
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AInfinityCharacter::Shoot);
 
 		//Aiming
 		PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AInfinityCharacter::StartAim);
@@ -136,7 +153,7 @@ void AInfinityCharacter::StartAim()
 	aiming = true;
 	GetCharacterMovement()->MaxWalkSpeed = 150.0f;
 	CameraBoom->TargetArmLength = 75.0f;
-	CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 25.0f);
+	CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 30.0f);
 	FollowCamera->bUsePawnControlRotation = true;
 	GetCharacterMovement()->bOrientRotationToMovement = false;
 	bUseControllerRotationYaw = true;
@@ -151,6 +168,32 @@ void AInfinityCharacter::StopAim()
 	FollowCamera->bUsePawnControlRotation = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+}
+
+void AInfinityCharacter::Shoot()
+{
+	if(aiming && hasWeapon)
+	{
+		FVector StartLocation = FollowCamera->GetComponentLocation(); 
+		FVector ShotLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
+		FHitResult Hit;
+		FCollisionQueryParams QueryParams;
+
+		if(GetWorld())
+		{
+			if(GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, ShotLocation, ECC_Pawn, QueryParams))
+			{
+				FTransform SpawnTransform(Hit.ImpactNormal.Rotation(), Hit.ImpactPoint);
+				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Sparks, SpawnTransform);
+			
+				if(Hit.GetActor()->ActorHasTag("Enemy"))
+				{
+				
+				
+				}
+			}	
+		}
+	}
 }
 
 

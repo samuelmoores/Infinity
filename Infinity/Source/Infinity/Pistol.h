@@ -11,22 +11,36 @@ class INFINITY_API APistol : public AActor
 {
 	GENERATED_BODY()
 
+	//Pistol Mesh
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* Mesh;
 
+	//Collider for overlap events
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* BoxCollider;
 
-	class AInfinityCharacter* PlayerCharacter;
-	
+
+
+	//Controls whether the mesh hovers up or down
 	int offset;
+
+	//Is the pistol connected to the player
 	bool attachedToPlayer;
 
-public:	
+public:
+
+	//Player reference for attachment
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class AInfinityCharacter* PlayerCharacter;
+	
 	// Sets default values for this actor's properties
 	APistol();
 
-	void AttachToPlayer();
+	//Connects the pistol to the player
+	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter);
+
+	//The pistol mesh floats up and down before being picked up
+	void Hover(float DeltaTime);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,5 +51,4 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	
-
 };
