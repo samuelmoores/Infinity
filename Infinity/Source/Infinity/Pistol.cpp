@@ -7,6 +7,8 @@
 #include "VectorTypes.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 APistol::APistol()
@@ -14,15 +16,30 @@ APistol::APistol()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Setup Pistol MEsh for Blueprint
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 
+	//Attach Box Collider to Pistol Mesh
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
 	BoxCollider->SetupAttachment(Mesh);
 	BoxCollider->SetGenerateOverlapEvents(true);
+
+	//Pistol starts hovering up and is not attached to the player
 	offset = 1;
 	attachedToPlayer = false;
 
+	//Setup Muzzle flash so it's location can be on the end of the pistol mesh
+	MuzzleFlashLocation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MuzzleFlash"));
+	MuzzleFlashLocation->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> MuzzleFlashFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
+
+	if(MuzzleFlashFinder.Succeeded())
+	{
+		MuzzleFlash = MuzzleFlashFinder.Object;
+	}
+	
 }
 
 // Called when the game starts or when spawned
@@ -61,11 +78,26 @@ void APistol::Hover(float DeltaTime)
 		if(GetActorLocation().Z >= 225.0f)
 		{
 			offset = -1;
+
 		}else if(GetActorLocation().Z <= 175.0f)
 		{
 			offset = 1;
+
 		}
 	}
+}
+
+void APistol::SpawnMuzzleFlash()
+{
+	FTransform SpawnTransform = GetActorTransform();
+	SpawnTransform.SetLocation(SpawnTransform.TransformPosition(MuzzleFlashLocation->GetComponentLocation()));
+	SpawnTransform.SetScale3D(MuzzleFlashLocation->GetComponentScale());
+	
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SpawnTransform);
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, SpawnTransform.GetRotation().ToString());
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, GetActorRotation().ToString());
+
 }
 
 void APistol::NotifyActorBeginOverlap(AActor* OtherActor)

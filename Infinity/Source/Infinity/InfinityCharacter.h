@@ -56,6 +56,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	class AEnemy* Enemy;
 
+	/** Pistol Reference */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
+	class APistol* Pistol;
+	
 	/** Does Player Have Weapon */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	bool hasWeapon;
@@ -83,14 +87,14 @@ protected:
 	/** Shooting */
 	void Shoot();
 	void StopShoot();
-			
 
-protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// To add mapping context
 	virtual void BeginPlay();
+
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 public:
 	/** Returns CameraBoom subobject **/

@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Pistol.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 
@@ -84,6 +85,14 @@ void AInfinityCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+}
+
+void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	if(OtherActor->ActorHasTag("Pistol"))
+		Pistol = Cast<APistol>(OtherActor);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -180,6 +189,12 @@ void AInfinityCharacter::Shoot()
 	if(aiming && hasWeapon)
 	{
 		shooting = true;
+
+		if(Pistol)
+			Pistol->SpawnMuzzleFlash();
+		else
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "No PistolRef");
+		
 		FVector StartLocation = FollowCamera->GetComponentLocation(); 
 		FVector ShotLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
 		FHitResult Hit;

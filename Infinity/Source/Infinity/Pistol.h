@@ -32,6 +32,11 @@ public:
 	//Player reference for attachment
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	class AInfinityCharacter* PlayerCharacter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UParticleSystemComponent* MuzzleFlashLocation;
+
+	UParticleSystem* MuzzleFlash;
 	
 	// Sets default values for this actor's properties
 	APistol();
@@ -41,6 +46,9 @@ public:
 
 	//The pistol mesh floats up and down before being picked up
 	void Hover(float DeltaTime);
+
+	//Create muzzle flash
+	void SpawnMuzzleFlash();
 
 protected:
 	// Called when the game starts or when spawned
