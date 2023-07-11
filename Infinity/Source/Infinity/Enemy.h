@@ -15,27 +15,8 @@ public:
 	// Sets default values for this character's properties
 	AEnemy();
 
-	UFUNCTION(BlueprintCallable)
-	void TakeDamage(float damageAmount);
-
-	UFUNCTION(BlueprintCallable)
-	float SetHealthBar();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	void NotifyActorBeginOverlap(AActor* OtherActor) override;
-	void NotifyActorEndOverlap(AActor* OtherActor) override;
-
-	UFUNCTION(BlueprintCallable)
-	void Attack();
-
-	UFUNCTION(BlueprintCallable)
-	void Death();
-
 	UPROPERTY(BlueprintReadOnly)
-	bool isBlocking;
+	bool blocking;
 
 	UPROPERTY(BlueprintReadWrite)
 	bool hit;
@@ -44,8 +25,33 @@ protected:
 	bool attacking;
 
 	UPROPERTY(BlueprintReadWrite)
-	bool isDead;
+	bool dead;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool shot;
+
+	UPROPERTY(BlueprintReadWrite)
+	float health;
+
+	UFUNCTION(BlueprintCallable)
+	void ShotDamage(float damageAmount);
+
+	UFUNCTION(BlueprintCallable)
+	float SetHealthBar();
+
+	UFUNCTION(BlueprintCallable)
+    void Attack();
+
+	UFUNCTION(BlueprintCallable)
+	void Death();
+
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 public:	
 	// Called every frame
@@ -56,15 +62,8 @@ public:
 
 private:
 	class APlayerCharacter* PlayerCharacer;
-
 	class AHitBox* Hitbox;
-
-
 	FTimerHandle Timer;
 	float attackCoolDown;
-	float health;
-
-	//time after enemy dies and the object is destroyed
 	float destroyLifetime;
-
 };

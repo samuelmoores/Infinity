@@ -63,12 +63,11 @@ AInfinityCharacter::AInfinityCharacter()
 
 	//Set Particle System
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> SparksFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
-
 	if(SparksFinder.Succeeded())
 	{
 		Sparks = SparksFinder.Object;
 	}
-	
+
 
 }
 
@@ -188,13 +187,12 @@ void AInfinityCharacter::Shoot()
 {
 	if(aiming && hasWeapon)
 	{
+		//Player is now shooting
 		shooting = true;
-
 		if(Pistol)
 			Pistol->SpawnMuzzleFlash();
-		else
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, "No PistolRef");
-		
+
+		//Find where the shot begins and where the shot ends
 		FVector StartLocation = FollowCamera->GetComponentLocation(); 
 		FVector ShotLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
 		FHitResult Hit;
@@ -202,6 +200,7 @@ void AInfinityCharacter::Shoot()
 
 		if(GetWorld())
 		{
+			//Send out the shot and check if it hits something
 			if(GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, ShotLocation, ECC_Pawn, QueryParams))
 			{
 				FTransform SpawnTransform(Hit.ImpactNormal.Rotation(), Hit.ImpactPoint);
@@ -209,13 +208,15 @@ void AInfinityCharacter::Shoot()
 			
 				if(Hit.GetActor()->ActorHasTag("Enemy"))
 				{
-				
-				
+					Enemy = Cast<AEnemy>(Hit.GetActor());
+					if(Enemy)
+						Enemy->ShotDamage(0.25f);
+					else
+						GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, "No Enemy");
 				}
 			}	
 		}
 	}
-
 }
 
 void AInfinityCharacter::StopShoot()

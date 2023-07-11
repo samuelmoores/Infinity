@@ -3,9 +3,12 @@
 
 #include "Enemy.h"
 
+#include "EnemyHealthUI.h"
 #include "HitBox.h"
-#include "Components/SphereComponent.h"
+#include "MovieSceneSequenceID.h"
+#include "NavigationSystemTypes.h"
 #include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -18,35 +21,23 @@ AEnemy::AEnemy()
 	hit = false;
 	attacking = false;
 	health = 1.0f;
-	isBlocking = false;
-	isDead = false;
+	blocking = false;
+	dead = false;
 	destroyLifetime = 5.0f;
 
 }
 
-void AEnemy::TakeDamage(float damageAmount)
+void AEnemy::ShotDamage(float damageAmount)
 {
+	health -= damageAmount;
 
-	
 	if(health < 0.1f)
 	{
 		health = 0.0f;
-		FString num = FString::SanitizeFloat(health);
-
-		isDead = true;
+		dead = true;
+		GetCharacterMovement()->DisableMovement();
 		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
-		
-	}else if(health > 1.0f)
-	{
-		health = 1.0f;
 	}
-	else
-	{
-		health -= damageAmount;
-		FString num = FString::SanitizeFloat(health);
-
-	}
-
 }
 
 float AEnemy::SetHealthBar()

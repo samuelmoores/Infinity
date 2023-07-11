@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Pistol.h"
-
-
 #include "InfinityCharacter.h"
 #include "VectorTypes.h"
 #include "Components/BoxComponent.h"
@@ -33,8 +31,8 @@ APistol::APistol()
 	MuzzleFlashLocation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MuzzleFlash"));
 	MuzzleFlashLocation->SetupAttachment(RootComponent);
 
+	//Get particle system 
 	static ConstructorHelpers::FObjectFinder<UParticleSystem> MuzzleFlashFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
-
 	if(MuzzleFlashFinder.Succeeded())
 	{
 		MuzzleFlash = MuzzleFlashFinder.Object;
@@ -94,10 +92,6 @@ void APistol::SpawnMuzzleFlash()
 	SpawnTransform.SetScale3D(MuzzleFlashLocation->GetComponentScale());
 	
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SpawnTransform);
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, SpawnTransform.GetRotation().ToString());
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, GetActorRotation().ToString());
-
 }
 
 void APistol::NotifyActorBeginOverlap(AActor* OtherActor)
