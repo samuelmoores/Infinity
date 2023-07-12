@@ -3,45 +3,41 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interactable.h"
+#include "GameFramework/Actor.h"
 #include "Door.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class INFINITY_API ADoor : public AInteractable
+class INFINITY_API ADoor : public AActor
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditDefaultsOnly)
+	class UBoxComponent* BoxCollider;
+
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Mesh;
+
+	float openSpeed;
+	float openTime;
+	float openTimeLimit;
+	float startTime;
+	FVector openLocation;
+	FVector closedLocation;
+	FTimerHandle Timer;
 	bool isOpen;
-	bool opening;
-	bool isClosed;
-	bool closing;
-	FVector OpenLocation;
-	FVector ClosedLocation;
-	FVector CurrentLocation;
-
-	float timeElapsed;
-	float deltaTime;
-	float InterpSpeed;
-
-	FTimerHandle TimerHandle;
-
-	void Door();
-
-	void BeginPlay() override;
-
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
-
-public:
-	UFUNCTION(BlueprintCallable)
-	void Open();
-
-	FString num;
 	
-	void MoveDoor();
+public:	
+	// Sets default values for this actor's properties
+	ADoor();
+	void Open();
+	void Move();
+	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 };
-

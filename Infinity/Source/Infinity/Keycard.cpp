@@ -1,39 +1,41 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Keycard.h"
+#include "KeyCard.h"
+#include "Components/BoxComponent.h"
 
-#include "Kismet/GameplayStatics.h"
-
-AKeycard::AKeycard()
+// Sets default values
+AKeyCard::AKeyCard()
 {
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
+	BoxCollider->SetupAttachment(RootComponent); 
+
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(BoxCollider);
+
+	rotationSpeed = 75.0f;
+	rotation = 0.0f;
 	
 }
 
-void AKeycard::BeginPlay()
+// Called when the game starts or when spawned
+void AKeyCard::BeginPlay()
 {
 	Super::BeginPlay();
-	
 
-}
-
-void AKeycard::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                              int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-
-
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AKeycard::TakeCard, GetWorld()->GetDeltaSeconds(), true);
 	
 }
 
-void AKeycard::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
+// Called every frame
+void AKeyCard::Tick(float DeltaTime)
 {
-	Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
+	Super::Tick(DeltaTime);
+
+	rotation += DeltaTime;
+	Mesh->SetRelativeRotation(FRotator(0.0f, rotation * rotationSpeed, 0.0f));
+
 }
 
-void AKeycard::TakeCard()
-{
-	
-}

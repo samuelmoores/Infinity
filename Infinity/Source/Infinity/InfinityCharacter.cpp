@@ -12,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Pistol.h"
+#include "Scanner.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 
@@ -68,6 +69,8 @@ AInfinityCharacter::AInfinityCharacter()
 		Sparks = SparksFinder.Object;
 	}
 
+	//Player starts not interacting
+	interacting = false;
 
 }
 
@@ -92,6 +95,16 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	if(OtherActor->ActorHasTag("Pistol"))
 		Pistol = Cast<APistol>(OtherActor);
+
+	if(OtherActor->ActorHasTag("Keycard"))
+	{
+		hasKeycard = true;
+		OtherActor->Destroy();		
+	}
+
+	if(OtherActor->ActorHasTag("Scanner"))
+		Scanner = Cast<AScanner>(OtherActor);
+	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,12 +128,15 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		//Shooting
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AInfinityCharacter::Shoot);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &AInfinityCharacter::StopShoot);
-
-
+		
 		//Aiming
 		PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AInfinityCharacter::StartAim);
 		PlayerInputComponent->BindAction("Aim", IE_Released, this, &AInfinityCharacter::StopAim);
 
+		//Interacting
+		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AInfinityCharacter::StartInteract);
+		PlayerInputComponent->BindAction("Interact", IE_Released, this, &AInfinityCharacter::StopInteract);
+		
 	}
 
 }
@@ -223,6 +239,19 @@ void AInfinityCharacter::StopShoot()
 {
 	shooting = false;
 
+}
+
+void AInfinityCharacter::StartInteract()
+{
+	interacting = true;
+
+	if(Scanner && hasKeycard)
+		Scanner->OpenDoor();
+}
+
+void AInfinityCharacter::StopInteract()
+{
+	interacting = false;
 }
 
 

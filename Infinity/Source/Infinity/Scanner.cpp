@@ -3,76 +3,70 @@
 
 #include "Scanner.h"
 
-#include "ToolContextInterfaces.h"
-#include "Kismet/GameplayStatics.h"
 #include "Door.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
-void AScanner::BeginPlay()
-{
-	Super::BeginPlay();
-
-	TArray<AActor*> FoundActors;
-
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("Door"), FoundActors);
-
-	for(AActor* Actor : FoundActors)
-	{
-		Door = Cast<ADoor>(Actor);
-		if(Door != NULL)
-		{
-
-			break;
-		}
-	}
-
-
-	if(PlayerCharacter)
-	{
-	}
-
-}
-
+// Sets default values
 AScanner::AScanner()
 {
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = false;
 
+	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
+	BoxCollider->SetupAttachment(RootComponent);
+
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	Mesh->SetupAttachment(BoxCollider);
+
+	activated = false;
 }
 
-void AScanner::TurnOnScreen(bool canEnter)
+void AScanner::UpdateScreen(AActor* OtherActor, int materialIndex)
 {
-	if(canEnter)
+	if(OtherActor->ActorHasTag("Player"))
 	{
-		Mesh->SetMaterial(0, Mesh->GetMaterial(4));
-		
-	}
-	else
-	{
-		Mesh->SetMaterial(0, Mesh->GetMaterial(5));
-
+		//Set screen index[0] to new material
+		Mesh->SetMaterial(0, Mesh->GetMaterial(materialIndex));
 	}
 }
-
-void AScanner::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-                              int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	Super::OnOverlapBegin(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-
-	
-	
-}
-
-void AScanner::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-	int32 OtherBodyIndex)
-{
-	Super::OnOverlapEnd(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex);
-	playerOverlapped = false;
-
-}
-
 
 void AScanner::OpenDoor()
 {
-
-	
+	if(FrontDoor)
+		FrontDoor->Open();
 }
 
+// Called when the game starts or when spawned
+void AScanner::BeginPlay()
+{
+	Super::BeginPlay();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), Doors);
+	for(int i = 0; i < Doors.Num(); i++)
+	{
+		if(Doors[i]->ActorHasTag("FrontDoor"))
+			FrontDoor = Cast<ADoor>(Doors[i]);
+	}
+}
+
+void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+	UpdateScreen(OtherActor, 5);
+	activated = true;
+}
+
+void AScanner::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+	UpdateScreen(OtherActor, 4);
+	activated = false;
+}
+
+// Called every frame
+void AScanner::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
 

@@ -3,10 +3,8 @@
 
 #include "Enemy.h"
 
-#include "EnemyHealthUI.h"
 #include "HitBox.h"
-#include "MovieSceneSequenceID.h"
-#include "NavigationSystemTypes.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -23,7 +21,7 @@ AEnemy::AEnemy()
 	health = 1.0f;
 	blocking = false;
 	dead = false;
-	destroyLifetime = 5.0f;
+	destroyLifetime = 15.0f;
 
 }
 
@@ -36,6 +34,7 @@ void AEnemy::ShotDamage(float damageAmount)
 		health = 0.0f;
 		dead = true;
 		GetCharacterMovement()->DisableMovement();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
 	}
 }

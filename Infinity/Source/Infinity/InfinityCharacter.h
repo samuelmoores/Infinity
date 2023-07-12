@@ -1,12 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "InfinityCharacter.generated.h"
-
 
 UCLASS(config=Game)
 class AInfinityCharacter : public ACharacter
@@ -24,6 +22,9 @@ class AInfinityCharacter : public ACharacter
 	/** Particle System*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Particles, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* Sparks;
+
+	/** Player must be able to use a scanner*/
+	class AScanner* Scanner;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -71,6 +72,14 @@ public:
 	/** Is player shooting, must be switched off with anim notify once shooting animation ends*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	bool shooting;
+
+	/** Is player interacting, must be switched off when button is released*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool interacting;
+
+	/** Does playing have a keycard, and can open door*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool hasKeycard;
 	
 protected:
 
@@ -87,6 +96,10 @@ protected:
 	/** Shooting */
 	void Shoot();
 	void StopShoot();
+
+	/** Interacting*/
+	void StartInteract();
+	void StopInteract();
 
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

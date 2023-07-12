@@ -19,8 +19,6 @@ class INFINITY_API APistol : public AActor
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* BoxCollider;
 
-
-
 	//Controls whether the mesh hovers up or down
 	int offset;
 

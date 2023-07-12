@@ -3,28 +3,36 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Interactable.h"
-#include "Keycard.generated.h"
+#include "GameFramework/Actor.h"
+#include "KeyCard.generated.h"
 
-/**
- * 
- */
+class UBoxComponent;
 UCLASS()
-class INFINITY_API AKeycard : public AInteractable
+class INFINITY_API AKeyCard : public AActor
 {
 	GENERATED_BODY()
-public:
-	class APlayerCharacter* PlayerCharacter;
 
-	FTimerHandle TimerHandle;
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* BoxCollider;
 
-	AKeycard();
+	UPROPERTY(EditDefaultsOnly)
+	UStaticMeshComponent* Mesh;
 
-	void BeginPlay() override;
-
-	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) override;
-	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) override;
-
-	void TakeCard();
+	UPROPERTY(EditAnywhere)
+	float rotationSpeed;
 	
+	float rotation;
+	
+public:	
+	// Sets default values for this actor's properties
+	AKeyCard();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 };
