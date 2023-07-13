@@ -244,7 +244,6 @@ void AInfinityCharacter::StopShoot()
 void AInfinityCharacter::StartInteract()
 {
 	interacting = true;
-
 	if(Scanner && hasKeycard)
 		Scanner->OpenDoor();
 }

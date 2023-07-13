@@ -17,6 +17,9 @@ class INFINITY_API AScanner : public AActor
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Mesh;
 
+	/**Scanner must check if player has keycard to open door*/
+	class AInfinityCharacter* Player;
+
 	/**Scanner must be able to open the doors it's connected to*/
 	class TArray<AActor*> Doors;
 	class ADoor* FrontDoor;
@@ -27,6 +30,8 @@ public:
 	AScanner();
 	void UpdateScreen(AActor* OtherActor, int materialIndex);
 	void OpenDoor();
+	UFUNCTION(BlueprintCallable)
+	bool CheckActivation();
 	
 protected:
 	// Called when the game starts or when spawned

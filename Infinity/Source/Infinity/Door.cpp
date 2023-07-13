@@ -23,14 +23,18 @@ ADoor::ADoor()
 }
 void ADoor::Open()
 {
-	startTime = GetWorld()->GetTimeSeconds();
-	GetWorldTimerManager().SetTimer(Timer, this, &ADoor::Move, GetWorld()->GetDeltaSeconds()/openSpeed, true);
+	if(!isOpen)
+	{
+		startTime = GetWorld()->GetTimeSeconds();
+		GetWorldTimerManager().SetTimer(Timer, this, &ADoor::Move, GetWorld()->GetDeltaSeconds()/openSpeed, true);
+	}
 }
 void ADoor::Move()
 {
 	float elapsedTime = GetWorld()->GetTimeSeconds() - startTime;
 	if(elapsedTime < 1.0f)
 	{
+		isOpen = true;
 		float Alpha = FMath::Clamp(elapsedTime, 0.0f, 1.0f);
 		Mesh->SetWorldLocation(FMath::Lerp(closedLocation, openLocation, Alpha));
 	}
@@ -38,6 +42,10 @@ void ADoor::Move()
 	{
 		float Alpha = FMath::Clamp(elapsedTime - 2.0f, 0.0f, 1.0f);
 		Mesh->SetWorldLocation(FMath::Lerp(openLocation, closedLocation, Alpha));
+	}else if(elapsedTime > 3.0f)
+	{
+		isOpen = false;
+		GetWorldTimerManager().ClearTimer(Timer);
 	}
 }
 // Called when the game starts or when spawned
@@ -45,6 +53,14 @@ void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
 }
+
+void ADoor::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+	if(OtherActor->ActorHasTag("Player"))
+		Open();
+}
+
 // Called every frame
 void ADoor::Tick(float DeltaTime)
 {

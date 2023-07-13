@@ -4,6 +4,7 @@
 #include "Scanner.h"
 
 #include "Door.h"
+#include "InfinityCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -37,6 +38,8 @@ void AScanner::OpenDoor()
 		FrontDoor->Open();
 }
 
+bool AScanner::CheckActivation(){return activated;}
+
 // Called when the game starts or when spawned
 void AScanner::BeginPlay()
 {
@@ -52,7 +55,14 @@ void AScanner::BeginPlay()
 void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	UpdateScreen(OtherActor, 5);
+	Player = Cast<AInfinityCharacter>(OtherActor);
+	if(Player)
+	{
+		if(Player->hasKeycard)
+			UpdateScreen(OtherActor, 6);
+		else
+			UpdateScreen(OtherActor, 5);
+	}
 	activated = true;
 }
 
