@@ -2,6 +2,8 @@
 
 
 #include "KeyCard.h"
+
+#include "InfinityCharacter.h"
 #include "Components/BoxComponent.h"
 
 // Sets default values
@@ -18,15 +20,21 @@ AKeyCard::AKeyCard()
 
 	rotationSpeed = 75.0f;
 	rotation = 0.0f;
-	
+	playerOverlapping = false;
 }
 
-// Called when the game starts or when spawned
-void AKeyCard::BeginPlay()
+void AKeyCard::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	Super::BeginPlay();
+	Super::NotifyActorBeginOverlap(OtherActor);
+	playerOverlapping = OtherActor->ActorHasTag("Player");
+					
+}
 
-	
+void AKeyCard::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+	playerOverlapping = !OtherActor->ActorHasTag("Player");
+
 }
 
 // Called every frame

@@ -60,7 +60,13 @@ public:
 	/** Pistol Reference */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	class APistol* Pistol;
-	
+
+	/**Player makes specific decisions for each type of interactable*/
+	TArray<AActor*> Interactables;
+	UPROPERTY(BlueprintReadOnly)
+	AActor* Interactable;
+	TArray<FName> InteractableTypes;
+
 	/** Does Player Have Weapon */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	bool hasWeapon;
@@ -76,6 +82,10 @@ public:
 	/** Is player interacting, must be switched off when button is released*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool interacting;
+
+	/**Is the player overlapping an interactable*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	bool canInteract;
 
 	/** Does playing have a keycard, and can open door*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -101,6 +111,8 @@ protected:
 	void StartInteract();
 	void StopInteract();
 
+	void CheckInteractType(AActor* OtherActor);
+
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
@@ -108,6 +120,7 @@ protected:
 	virtual void BeginPlay();
 
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 public:
 	/** Returns CameraBoom subobject **/

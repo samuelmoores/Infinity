@@ -11,6 +11,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "KeyCard.h"
 #include "Pistol.h"
 #include "Scanner.h"
 #include "Kismet/GameplayStatics.h"
@@ -71,6 +72,9 @@ AInfinityCharacter::AInfinityCharacter()
 
 	//Player starts not interacting
 	interacting = false;
+	InteractableTypes = {"Keycard", "Pistol", "Scanner", "Computer"};
+
+	hasKeycard = false;
 
 }
 
@@ -87,24 +91,27 @@ void AInfinityCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), "Interactable", Interactables);
+
 }
 
 void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-
-	if(OtherActor->ActorHasTag("Pistol"))
-		Pistol = Cast<APistol>(OtherActor);
-
-	if(OtherActor->ActorHasTag("Keycard"))
+	if(OtherActor->ActorHasTag("Interactable"))
 	{
-		hasKeycard = true;
-		OtherActor->Destroy();		
+		canInteract = true;
+		Interactable = OtherActor;
 	}
+		
+}
 
-	if(OtherActor->ActorHasTag("Scanner"))
-		Scanner = Cast<AScanner>(OtherActor);
-	
+void AInfinityCharacter::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+	if(OtherActor->ActorHasTag("Interactable"))
+		canInteract = false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -143,6 +150,7 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 void AInfinityCharacter::Move(const FInputActionValue& Value)
 {
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -244,14 +252,30 @@ void AInfinityCharacter::StopShoot()
 void AInfinityCharacter::StartInteract()
 {
 	interacting = true;
-	if(Scanner && hasKeycard)
-		Scanner->OpenDoor();
+
+	if(Interactable->ActorHasTag("KeyCard"))
+	{
+		hasKeycard = true;
+		Interactable->Destroy();
+	}else if(Interactable->ActorHasTag("Pistol"))
+	{
+		
+	}else if(Interactable->ActorHasTag("Scanner"))
+	{
+		Scanner = Cast<AScanner>(Interactable);
+		if(Scanner && hasKeycard)
+		{
+			Scanner->OpenDoor();
+		}
+	}
+	
 }
 
 void AInfinityCharacter::StopInteract()
 {
 	interacting = false;
 }
+
 
 
 
