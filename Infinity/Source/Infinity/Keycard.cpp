@@ -2,7 +2,6 @@
 
 
 #include "KeyCard.h"
-
 #include "InfinityCharacter.h"
 #include "Components/BoxComponent.h"
 

@@ -4,6 +4,7 @@
 #include "Enemy.h"
 
 #include "HitBox.h"
+#include "KeyCard.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -22,6 +23,7 @@ AEnemy::AEnemy()
 	blocking = false;
 	dead = false;
 	destroyLifetime = 15.0f;
+	hasKeycard = false;
 
 }
 
@@ -31,6 +33,13 @@ void AEnemy::ShotDamage(float damageAmount)
 
 	if(health < 0.1f)
 	{
+		if(hasKeycard)
+		{
+			FActorSpawnParameters spawnParams;
+			GetWorld()->SpawnActor<AKeyCard>(Keycard, GetActorLocation(), GetActorRotation());
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "Spawn Keycard");
+		}
+		
 		health = 0.0f;
 		dead = true;
 		GetCharacterMovement()->DisableMovement();

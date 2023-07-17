@@ -33,6 +33,12 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	float health;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool hasKeycard;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AKeyCard> Keycard;
+
 	UFUNCTION(BlueprintCallable)
 	void ShotDamage(float damageAmount);
 
