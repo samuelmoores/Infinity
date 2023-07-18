@@ -14,6 +14,7 @@
 #include "KeyCard.h"
 #include "Pistol.h"
 #include "Scanner.h"
+#include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 
@@ -234,7 +235,9 @@ void AInfinityCharacter::Shoot()
 				{
 					Enemy = Cast<AEnemy>(Hit.GetActor());
 					if(Enemy)
-						Enemy->ShotDamage(0.25f);
+					{
+						Enemy->TakeDamage(0.05f, static_cast<FDamageEvent>(UDamageType::StaticClass()), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+					}
 					else
 						GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, "No Enemy");
 				}

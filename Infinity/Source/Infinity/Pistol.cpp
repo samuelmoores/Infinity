@@ -53,7 +53,7 @@ void APistol::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//Weapon hovers up and down in the level before being picked up
-	Hover(DeltaTime);
+	//Hover(DeltaTime);
 }
 
 void APistol::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)

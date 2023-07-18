@@ -36,11 +36,17 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool hasKeycard;
 
+	UPROPERTY(BlueprintReadWrite)
+	bool isHit;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AKeyCard> Keycard;
 
 	UFUNCTION(BlueprintCallable)
 	void ShotDamage(float damageAmount);
+
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
 	float SetHealthBar();
@@ -51,6 +57,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Death();
 
+	
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -59,12 +67,15 @@ protected:
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
 
+	
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
 
 private:
 	class APlayerCharacter* PlayerCharacer;

@@ -7,6 +7,7 @@
 #include "KeyCard.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Engine/DamageEvents.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -24,20 +25,23 @@ AEnemy::AEnemy()
 	dead = false;
 	destroyLifetime = 15.0f;
 	hasKeycard = false;
+	isHit = false;
 
 }
 
 void AEnemy::ShotDamage(float damageAmount)
 {
 	health -= damageAmount;
+	isHit = true;
+	GetCharacterMovement()->StopActiveMovement();
 
+	
 	if(health < 0.1f)
 	{
 		if(hasKeycard)
 		{
 			FActorSpawnParameters spawnParams;
 			GetWorld()->SpawnActor<AKeyCard>(Keycard, GetActorLocation(), GetActorRotation());
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "Spawn Keycard");
 		}
 		
 		health = 0.0f;
@@ -46,6 +50,31 @@ void AEnemy::ShotDamage(float damageAmount)
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
 	}
+}
+
+float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+                         AActor* DamageCauser)
+{
+	health -= DamageAmount;
+	isHit = true;
+	GetCharacterMovement()->StopActiveMovement();
+
+	if(health < 0.1f)
+	{
+		if(hasKeycard)
+		{
+			FActorSpawnParameters spawnParams;
+			GetWorld()->SpawnActor<AKeyCard>(Keycard, GetActorLocation(), GetActorRotation());
+		}
+		
+		health = 0.0f;
+		dead = true;
+		GetCharacterMovement()->DisableMovement();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
+	}
+	
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 float AEnemy::SetHealthBar()
