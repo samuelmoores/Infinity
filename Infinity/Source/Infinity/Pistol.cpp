@@ -37,13 +37,18 @@ APistol::APistol()
 	{
 		MuzzleFlash = MuzzleFlashFinder.Object;
 	}
-	
+
 }
 
 // Called when the game starts or when spawned
 void APistol::BeginPlay()
 {
 	Super::BeginPlay();
+	if(GetWorld())
+	{
+		StartingLocationHover = FVector(987.919924,-189.360984,494.446074);
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, StartingLocationHover.ToString());
+	}
 	
 }
 
@@ -53,7 +58,7 @@ void APistol::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	//Weapon hovers up and down in the level before being picked up
-	//Hover(DeltaTime);
+	Hover(DeltaTime);
 }
 
 void APistol::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
@@ -72,12 +77,13 @@ void APistol::Hover(float DeltaTime)
 		FVector NewLocation = FMath::Lerp(GetActorLocation(), GetActorLocation() + FVector(0.0f, 0.0f, 100.0f * offset), DeltaTime);
 		Mesh->SetWorldLocation(NewLocation);
 
+
 		//Mesh hovers up and down by 50.0 units
-		if(GetActorLocation().Z >= 225.0f)
+		if(GetActorLocation().Z >= StartingLocationHover.Z + 20)
 		{
 			offset = -1;
 
-		}else if(GetActorLocation().Z <= 175.0f)
+		}else if(GetActorLocation().Z <= StartingLocationHover.Z - 20)
 		{
 			offset = 1;
 

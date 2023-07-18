@@ -35,6 +35,8 @@ public:
 	UParticleSystemComponent* MuzzleFlashLocation;
 
 	UParticleSystem* MuzzleFlash;
+
+	FVector StartingLocationHover;
 	
 	// Sets default values for this actor's properties
 	APistol();

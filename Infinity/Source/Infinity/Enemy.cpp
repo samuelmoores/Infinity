@@ -27,6 +27,7 @@ AEnemy::AEnemy()
 	hasKeycard = false;
 	isHit = false;
 
+
 }
 
 void AEnemy::ShotDamage(float damageAmount)
@@ -70,6 +71,8 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		health = 0.0f;
 		dead = true;
 		GetCharacterMovement()->DisableMovement();
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
 	}

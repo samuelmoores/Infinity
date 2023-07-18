@@ -23,33 +23,12 @@ AScanner::AScanner()
 	activated = false;
 }
 
-void AScanner::UpdateScreen(AActor* OtherActor, int materialIndex)
-{
-	if(OtherActor->ActorHasTag("Player"))
-	{
-		//Set screen index[0] to new material
-		Mesh->SetMaterial(0, Mesh->GetMaterial(materialIndex));
-	}
-}
-
-void AScanner::OpenDoor()
-{
-	if(FrontDoor)
-		FrontDoor->Open();
-}
-
-bool AScanner::CheckActivation(){return activated;}
-
 // Called when the game starts or when spawned
 void AScanner::BeginPlay()
 {
 	Super::BeginPlay();
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), Doors);
-	for(int i = 0; i < Doors.Num(); i++)
-	{
-		if(Doors[i]->ActorHasTag("FrontDoor"))
-			FrontDoor = Cast<ADoor>(Doors[i]);
-	}
+
+	
 }
 
 void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -64,6 +43,27 @@ void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
 			UpdateScreen(OtherActor, 5);
 	}
 	activated = true;
+	if(GetWorld())
+	{
+		//Get all the doors
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), Doors);
+
+		//Get distance from first door
+		float leastDistance = FVector::Dist(GetActorLocation(), Doors[0]->GetActorLocation());
+
+		//Iterate through all the doors
+		for(int i = 0; i < Doors.Num(); i++)
+		{
+			//Get distance from current door to this scanner
+			float currDistance = FVector::Dist(GetActorLocation(), Doors[i]->GetActorLocation());
+			
+			if(currDistance <= leastDistance)
+			{
+				Door = Cast<ADoor>(Doors[i]);
+				leastDistance = currDistance;
+			}
+		}
+	}
 }
 
 void AScanner::NotifyActorEndOverlap(AActor* OtherActor)
@@ -73,10 +73,26 @@ void AScanner::NotifyActorEndOverlap(AActor* OtherActor)
 	activated = false;
 }
 
-// Called every frame
-void AScanner::Tick(float DeltaTime)
+void AScanner::UpdateScreen(AActor* OtherActor, int materialIndex)
 {
-	Super::Tick(DeltaTime);
-
+	if(OtherActor->ActorHasTag("Player"))
+	{
+		//Set screen index[0] to new material
+		Mesh->SetMaterial(0, Mesh->GetMaterial(materialIndex));
+	}
 }
+
+void AScanner::OpenDoor()
+{
+	if(Door)
+		Door->Open();
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, "No Door to open");
+	}
+}
+
+bool AScanner::CheckActivation(){return activated;}
+
+
 

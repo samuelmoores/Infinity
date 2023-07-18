@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InfinityCharacter.h"
-
 #include "Enemy.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -17,7 +16,6 @@
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
-
 
 //////////////////////////////////////////////////////////////////////////
 // AInfinityCharacter
@@ -104,6 +102,11 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	{
 		canInteract = true;
 		Interactable = OtherActor;
+	}
+
+	if(OtherActor->ActorHasTag("Pistol"))
+	{
+		Pistol = Cast<APistol>(OtherActor);
 	}
 		
 }
@@ -236,7 +239,7 @@ void AInfinityCharacter::Shoot()
 					Enemy = Cast<AEnemy>(Hit.GetActor());
 					if(Enemy)
 					{
-						Enemy->TakeDamage(0.05f, static_cast<FDamageEvent>(UDamageType::StaticClass()), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
+						Enemy->TakeDamage(0.15f, static_cast<FDamageEvent>(UDamageType::StaticClass()), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
 					}
 					else
 						GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, "No Enemy");
@@ -256,22 +259,25 @@ void AInfinityCharacter::StartInteract()
 {
 	interacting = true;
 
-	if(Interactable->ActorHasTag("KeyCard"))
+	if(Interactable)
 	{
-		hasKeycard = true;
-		Interactable->Destroy();
-	}else if(Interactable->ActorHasTag("Pistol"))
-	{
-		
-	}else if(Interactable->ActorHasTag("Scanner"))
-	{
-		Scanner = Cast<AScanner>(Interactable);
-		if(Scanner && hasKeycard)
+		if(Interactable->ActorHasTag("KeyCard"))
 		{
-			Scanner->OpenDoor();
+			hasKeycard = true;
+			Interactable->Destroy();
+		}else if(Interactable->ActorHasTag("Pistol"))
+		{
+		
+		}else if(Interactable->ActorHasTag("Scanner"))
+		{
+			Scanner = Cast<AScanner>(Interactable);
+			if(Scanner && hasKeycard)
+			{
+				Scanner->OpenDoor();
+			}
 		}
 	}
-	
+
 }
 
 void AInfinityCharacter::StopInteract()

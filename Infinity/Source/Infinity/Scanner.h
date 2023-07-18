@@ -22,7 +22,7 @@ class INFINITY_API AScanner : public AActor
 
 	/**Scanner must be able to open the doors it's connected to*/
 	class TArray<AActor*> Doors;
-	class ADoor* FrontDoor;
+	class ADoor* Door;
 	bool activated;
 	
 public:	
@@ -38,9 +38,5 @@ protected:
 	virtual void BeginPlay() override;
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };

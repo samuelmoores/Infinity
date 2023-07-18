@@ -10,17 +10,25 @@ ADoor::ADoor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
-	BoxCollider->SetupAttachment(RootComponent);
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 	openSpeed = 50.0f;
 	openTime = 0.0f;
 	openTimeLimit = 4.0f;
-	openLocation = FVector(-650.0f,-639.7f, 400.0f);
-	closedLocation = FVector(-650.0f,-350.0f,400.0f);
+
 	isOpen = false;
 }
+// Called when the game starts or when spawned
+void ADoor::BeginPlay()
+{
+	Super::BeginPlay();
+	if(GetWorld())
+	{
+		openLocation = Mesh->GetComponentLocation() + FVector(0,-300.0f, 0);
+		closedLocation = Mesh->GetComponentLocation();
+	}
+}
+
 void ADoor::Open()
 {
 	if(!isOpen)
@@ -37,21 +45,18 @@ void ADoor::Move()
 		isOpen = true;
 		float Alpha = FMath::Clamp(elapsedTime, 0.0f, 1.0f);
 		Mesh->SetWorldLocation(FMath::Lerp(closedLocation, openLocation, Alpha));
+
 	}
 	else if(elapsedTime > 2.0f && elapsedTime < 3.0f)
 	{
 		float Alpha = FMath::Clamp(elapsedTime - 2.0f, 0.0f, 1.0f);
 		Mesh->SetWorldLocation(FMath::Lerp(openLocation, closedLocation, Alpha));
+
 	}else if(elapsedTime > 3.0f)
 	{
 		isOpen = false;
 		GetWorldTimerManager().ClearTimer(Timer);
 	}
-}
-// Called when the game starts or when spawned
-void ADoor::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void ADoor::NotifyActorBeginOverlap(AActor* OtherActor)
