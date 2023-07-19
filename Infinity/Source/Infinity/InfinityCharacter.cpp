@@ -76,6 +76,10 @@ AInfinityCharacter::AInfinityCharacter()
 	hasKeycard = false;
 
 	selectedWeaponIndex = 0;
+	Weapons.Add(nullptr);
+	Weapons.Add(nullptr);
+	Weapons.Add(nullptr);
+	
 
 }
 
@@ -285,6 +289,7 @@ void AInfinityCharacter::StartInteract()
 		if(hasWeapon)
 		{
 			Pistol->DetachFromPlayer();
+			Weapons[selectedWeaponIndex] = nullptr;
 			hasWeapon = false;
 		}
 		else
@@ -294,7 +299,10 @@ void AInfinityCharacter::StartInteract()
 				if(Pistol->canPickup)
 				{
 					Pistol->AttachToPlayer(this);
-					Weapons.Add(Pistol);
+					if(!Weapons[selectedWeaponIndex])
+					{
+						Weapons[selectedWeaponIndex] = Pistol;
+					}
 				}
 			}
 		}
@@ -308,30 +316,47 @@ void AInfinityCharacter::StopInteract()
 
 void AInfinityCharacter::ChangeWeapon()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "ChangeWeapon");
-
 	if(selectedWeaponIndex == 0)
 	{
-		selectedWeaponIndex++;
-		if(!Weapons.IsEmpty())
+		if(Weapons[selectedWeaponIndex])
 		{
-			if(Weapons.Num() > 0)
-			{
-			
-			}
-			else
-			{
-				hasWeapon = false;
-			}
+			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
+				Pistol->HolsterPistol(this);
 		}
+		selectedWeaponIndex++;
+		if(Weapons[selectedWeaponIndex])
+		{
+			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
+				Pistol->AttachToPlayer(this);
+		}
+		
 	}else if(selectedWeaponIndex == 1)
 	{
+		if(Weapons[selectedWeaponIndex])
+		{
+			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
+				Pistol->HolsterPistol(this);
+		}
 		selectedWeaponIndex++;
+		if(Weapons[selectedWeaponIndex])
+		{
+			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
+				Pistol->AttachToPlayer(this);
+		}
 		
 	}else if(selectedWeaponIndex == 2)
 	{
+		if(Weapons[selectedWeaponIndex])
+		{
+			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
+				Pistol->HolsterPistol(this);
+		}
 		selectedWeaponIndex = 0;
-		
+		if(Weapons[selectedWeaponIndex])
+		{
+			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
+				Pistol->AttachToPlayer(this);
+		}
 	}
 }
 

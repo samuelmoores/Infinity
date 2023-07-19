@@ -39,6 +39,10 @@ APistol::APistol()
 	}
 
 	canPickup = false;
+	LerpDistance = 30.0f;
+	LerpSpeed = 50.0f;
+	rotation = 0.0f;
+	rotationSpeed = 75.0f;
 
 }
 
@@ -48,7 +52,8 @@ void APistol::BeginPlay()
 	Super::BeginPlay();
 	if(GetWorld())
 	{
-		StartingLocationHover = FVector(987.919924,-189.360984,494.446074);
+		StartingLocationHover = GetActorLocation();
+		EndingLocationHover = GetActorLocation() + FVector(0.0f, 0.0f, LerpDistance);
 	}
 	
 }
@@ -66,8 +71,11 @@ void APistol::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
 {
 	//Get the players mesh to access the hand socket and snap the pistol actor to it
 	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
+	BoxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	attachedToPlayer = true;
 	AttachPlayerCharacter->hasWeapon = true;
+	Mesh->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+
 
 }
 
@@ -77,29 +85,38 @@ void APistol::DetachFromPlayer()
 	DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
 	SetActorLocation(Location);
 	attachedToPlayer = false;
+	BoxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	StartingLocationHover = GetActorLocation();
+	EndingLocationHover = GetActorLocation() + FVector(0.0f, 0.0f, LerpDistance);
 
+}
+
+void APistol::HolsterPistol(AInfinityCharacter* AttachPlayerCharacter)
+{
+	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "pelvis_SOC");
+	AttachPlayerCharacter->hasWeapon = false;
 }
 
 void APistol::Hover(float DeltaTime)
 {
-	if(!attachedToPlayer)
-	{
-		//Linear Interpolate up and down at a rate of 100
-		FVector NewLocation = FMath::Lerp(GetActorLocation(), GetActorLocation() + FVector(0.0f, 0.0f, 100.0f * offset), DeltaTime);
-		Mesh->SetWorldLocation(NewLocation);
-
-
-		//Mesh hovers up and down by 50.0 units
-		if(GetActorLocation().Z >= StartingLocationHover.Z + 20)
+		if(!attachedToPlayer)
 		{
-			offset = -1;
-
-		}else if(GetActorLocation().Z <= StartingLocationHover.Z - 20)
-		{
-			offset = 1;
-
+			float Alpha = FMath::Clamp(DeltaTime, 0.0f, 1.0f);
+			//Linear Interpolate up and down at a rate of 100
+			FVector NewLocation = FMath::Lerp(GetActorLocation(), GetActorLocation() + FVector(0.0f, 0.0f, LerpSpeed * offset), Alpha);
+			Mesh->SetWorldLocation(NewLocation);
+			if(NewLocation.Z >= EndingLocationHover.Z)
+			{
+				offset = -1;
+			}else if(NewLocation.Z <= StartingLocationHover.Z)
+			{
+				offset = 1;
+			}
+			rotation +=DeltaTime;
+			Mesh->SetRelativeRotation(FRotator(0.0f, rotation * rotationSpeed, 0.0f));
+			Mesh->SetWorldScale3D(FVector(3.0f, 3.0f, 3.0f));
 		}
-	}
+	
 }
 
 void APistol::SpawnMuzzleFlash()

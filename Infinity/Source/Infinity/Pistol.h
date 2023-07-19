@@ -38,6 +38,11 @@ public:
 	UParticleSystem* MuzzleFlash;
 
 	FVector StartingLocationHover;
+	FVector EndingLocationHover;
+	float LerpDistance;
+	float LerpSpeed;
+	float rotation;
+	float rotationSpeed;
 
 	bool canPickup;
 	
@@ -47,6 +52,7 @@ public:
 	//Connects the pistol to the player
 	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter);
 	void DetachFromPlayer();
+	void HolsterPistol(AInfinityCharacter* AttachPlayerCharacter);
 
 	//The pistol mesh floats up and down before being picked up
 	void Hover(float DeltaTime);
