@@ -38,6 +38,8 @@ APistol::APistol()
 		MuzzleFlash = MuzzleFlashFinder.Object;
 	}
 
+	canPickup = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -47,7 +49,6 @@ void APistol::BeginPlay()
 	if(GetWorld())
 	{
 		StartingLocationHover = FVector(987.919924,-189.360984,494.446074);
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, StartingLocationHover.ToString());
 	}
 	
 }
@@ -67,6 +68,16 @@ void APistol::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
 	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
 	attachedToPlayer = true;
 	AttachPlayerCharacter->hasWeapon = true;
+
+}
+
+void APistol::DetachFromPlayer()
+{
+	FVector Location = GetActorLocation();
+	DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
+	SetActorLocation(Location);
+	attachedToPlayer = false;
+
 }
 
 void APistol::Hover(float DeltaTime)
@@ -107,12 +118,19 @@ void APistol::NotifyActorBeginOverlap(AActor* OtherActor)
 	//Check for player collision
 	if(OtherActor->ActorHasTag("Player"))
 	{
-		PlayerCharacter = Cast<AInfinityCharacter>(OtherActor);
+		canPickup = true;
+		
+	}
+}
 
-		if(PlayerCharacter)
-		{
-			AttachToPlayer(PlayerCharacter);
-		}
+void APistol::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+
+	//Check for player collision
+	if(OtherActor->ActorHasTag("Player"))
+	{
+		canPickup = false;
 		
 	}
 }

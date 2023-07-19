@@ -25,6 +25,7 @@ class INFINITY_API APistol : public AActor
 	//Is the pistol connected to the player
 	bool attachedToPlayer;
 
+
 public:
 
 	//Player reference for attachment
@@ -37,12 +38,15 @@ public:
 	UParticleSystem* MuzzleFlash;
 
 	FVector StartingLocationHover;
+
+	bool canPickup;
 	
 	// Sets default values for this actor's properties
 	APistol();
 
 	//Connects the pistol to the player
 	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter);
+	void DetachFromPlayer();
 
 	//The pistol mesh floats up and down before being picked up
 	void Hover(float DeltaTime);
@@ -58,5 +62,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 	
 };
+
+

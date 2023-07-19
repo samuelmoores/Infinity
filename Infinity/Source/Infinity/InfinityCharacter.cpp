@@ -75,6 +75,8 @@ AInfinityCharacter::AInfinityCharacter()
 
 	hasKeycard = false;
 
+	selectedWeaponIndex = 0;
+
 }
 
 void AInfinityCharacter::BeginPlay()
@@ -147,6 +149,9 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 		//Interacting
 		PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AInfinityCharacter::StartInteract);
 		PlayerInputComponent->BindAction("Interact", IE_Released, this, &AInfinityCharacter::StopInteract);
+
+		//Changing Weapons
+		PlayerInputComponent->BindAction("ChangeWeapon", IE_Pressed, this, &AInfinityCharacter::ChangeWeapon);
 		
 	}
 
@@ -265,9 +270,6 @@ void AInfinityCharacter::StartInteract()
 		{
 			hasKeycard = true;
 			Interactable->Destroy();
-		}else if(Interactable->ActorHasTag("Pistol"))
-		{
-		
 		}else if(Interactable->ActorHasTag("Scanner"))
 		{
 			Scanner = Cast<AScanner>(Interactable);
@@ -278,11 +280,59 @@ void AInfinityCharacter::StartInteract()
 		}
 	}
 
+	if(Pistol)
+	{
+		if(hasWeapon)
+		{
+			Pistol->DetachFromPlayer();
+			hasWeapon = false;
+		}
+		else
+		{
+			if(Pistol->canPickup)
+			{
+				if(Pistol->canPickup)
+				{
+					Pistol->AttachToPlayer(this);
+					Weapons.Add(Pistol);
+				}
+			}
+		}
+	}
 }
 
 void AInfinityCharacter::StopInteract()
 {
 	interacting = false;
+}
+
+void AInfinityCharacter::ChangeWeapon()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "ChangeWeapon");
+
+	if(selectedWeaponIndex == 0)
+	{
+		selectedWeaponIndex++;
+		if(!Weapons.IsEmpty())
+		{
+			if(Weapons.Num() > 0)
+			{
+			
+			}
+			else
+			{
+				hasWeapon = false;
+			}
+		}
+	}else if(selectedWeaponIndex == 1)
+	{
+		selectedWeaponIndex++;
+		
+	}else if(selectedWeaponIndex == 2)
+	{
+		selectedWeaponIndex = 0;
+		
+	}
 }
 
 

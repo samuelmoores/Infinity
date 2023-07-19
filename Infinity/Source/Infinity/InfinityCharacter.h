@@ -50,6 +50,7 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ShootAction;
 
+
 public:
 	AInfinityCharacter();
 
@@ -66,6 +67,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	AActor* Interactable;
 	TArray<FName> InteractableTypes;
+	
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AActor*> Weapons;
 
 	/** Does Player Have Weapon */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
@@ -90,7 +94,10 @@ public:
 	/** Does playing have a keycard, and can open door*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool hasKeycard;
-	
+
+	UPROPERTY(BlueprintReadOnly)
+	int selectedWeaponIndex;
+
 protected:
 
 	/** Called for movement input */
@@ -110,6 +117,9 @@ protected:
 	/** Interacting*/
 	void StartInteract();
 	void StopInteract();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeWeapon();
 
 	void CheckInteractType(AActor* OtherActor);
 
