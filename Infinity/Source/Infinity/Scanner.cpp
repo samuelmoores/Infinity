@@ -37,7 +37,7 @@ void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
 	Player = Cast<AInfinityCharacter>(OtherActor);
 	if(Player)
 	{
-		if(Player->hasKeycard)
+		if(Player->GetHasKeycard())
 			UpdateScreen(OtherActor, 6);
 		else
 			UpdateScreen(OtherActor, 5);

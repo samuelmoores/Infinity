@@ -38,7 +38,10 @@ APistol::APistol()
 		MuzzleFlash = MuzzleFlashFinder.Object;
 	}
 
+	//Pistol spawns and cannot be picked up until overlapped with player
 	canPickup = false;
+
+	//Settings that allow pistol to hover and rotate in the level before being picked up
 	LerpDistance = 30.0f;
 	LerpSpeed = 50.0f;
 	rotation = 0.0f;
@@ -73,10 +76,7 @@ void APistol::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
 	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
 	BoxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	attachedToPlayer = true;
-	AttachPlayerCharacter->hasWeapon = true;
 	Mesh->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
-
-
 }
 
 void APistol::DetachFromPlayer()
@@ -94,7 +94,6 @@ void APistol::DetachFromPlayer()
 void APistol::HolsterPistol(AInfinityCharacter* AttachPlayerCharacter)
 {
 	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "pelvis_SOC");
-	AttachPlayerCharacter->hasWeapon = false;
 }
 
 void APistol::Hover(float DeltaTime)
@@ -134,10 +133,7 @@ void APistol::NotifyActorBeginOverlap(AActor* OtherActor)
 
 	//Check for player collision
 	if(OtherActor->ActorHasTag("Player"))
-	{
 		canPickup = true;
-		
-	}
 }
 
 void APistol::NotifyActorEndOverlap(AActor* OtherActor)
@@ -146,9 +142,6 @@ void APistol::NotifyActorEndOverlap(AActor* OtherActor)
 
 	//Check for player collision
 	if(OtherActor->ActorHasTag("Player"))
-	{
 		canPickup = false;
-		
-	}
 }
 

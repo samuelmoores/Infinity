@@ -19,13 +19,6 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	/** Particle System*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Particles, meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* Sparks;
-
-	/** Player must be able to use a scanner*/
-	class AScanner* Scanner;
-	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
@@ -49,11 +42,14 @@ class AInfinityCharacter : public ACharacter
 	/** Shoot Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ShootAction;
+	
+	/** Particle System for shot hit location*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Particles, meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* Sparks;
 
-
-public:
-	AInfinityCharacter();
-
+	/** Player must be able to use a scanner*/
+	class AScanner* Scanner;
+	
 	/** Enemy Reference*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Enemy, meta = (AllowPrivateAccess = "true"))
 	class AEnemy* Enemy;
@@ -64,14 +60,20 @@ public:
 
 	/**Player makes specific decisions for each type of interactable*/
 	TArray<AActor*> Interactables;
-	UPROPERTY(BlueprintReadOnly)
+
+	/**Interactable reference from overlap*/
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* Interactable;
-	TArray<FName> InteractableTypes;
-	
-	UPROPERTY(BlueprintReadOnly)
+
+	/**All of the players 3 different weapons that can be carried*/
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> Weapons;
 
-	/** Does Player Have Weapon */
+	/**Which weapon to equip from the weapon HUD, can be toggled through the weapons array*/
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int selectedWeaponIndex;
+
+	/** Does Player Have Weapon in hand, false if dropped or unequiped*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
 	bool hasWeapon;
 
@@ -95,16 +97,31 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool hasKeycard;
 
-	UPROPERTY(BlueprintReadOnly)
-	int selectedWeaponIndex;
-
-protected:
+public:
+	AInfinityCharacter();
+		
+	// To add mapping context
+	virtual void BeginPlay();
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+	
+	// APawn interface
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	/** Returns CameraBoom subobject **/
+	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	/** Returns FollowCamera subobject **/
+	FORCEINLINE const bool* GetHasKeycard() const { return &hasKeycard; }
+
+	//Overlap Event overrides
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 	/** Aiming */
 	void StartAim();
@@ -118,24 +135,9 @@ protected:
 	void StartInteract();
 	void StopInteract();
 
+	/*Updates selected weapon for the player HUD*/
 	UFUNCTION(BlueprintCallable)
 	void ChangeWeapon();
 
-	void CheckInteractType(AActor* OtherActor);
-
-	// APawn interface
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
-	// To add mapping context
-	virtual void BeginPlay();
-
-	void NotifyActorBeginOverlap(AActor* OtherActor) override;
-	void NotifyActorEndOverlap(AActor* OtherActor) override;
-
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
 

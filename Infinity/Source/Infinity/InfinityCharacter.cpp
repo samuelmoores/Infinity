@@ -71,15 +71,13 @@ AInfinityCharacter::AInfinityCharacter()
 
 	//Player starts not interacting
 	interacting = false;
-	InteractableTypes = {"Keycard", "Pistol", "Scanner", "Computer"};
-
 	hasKeycard = false;
 
+	//Player starts with first weapon selected
 	selectedWeaponIndex = 0;
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
-	
 
 }
 
@@ -296,14 +294,13 @@ void AInfinityCharacter::StartInteract()
 		{
 			if(Pistol->canPickup)
 			{
-				if(Pistol->canPickup)
+				Pistol->AttachToPlayer(this);
+				hasWeapon = true;
+				if(!Weapons[selectedWeaponIndex])
 				{
-					Pistol->AttachToPlayer(this);
-					if(!Weapons[selectedWeaponIndex])
-					{
-						Weapons[selectedWeaponIndex] = Pistol;
-					}
+					Weapons[selectedWeaponIndex] = Pistol;
 				}
+				
 			}
 		}
 	}

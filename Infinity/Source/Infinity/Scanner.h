@@ -21,22 +21,29 @@ class INFINITY_API AScanner : public AActor
 	class AInfinityCharacter* Player;
 
 	/**Scanner must be able to open the doors it's connected to*/
-	class TArray<AActor*> Doors;
+	TArray<AActor*> Doors;
 	class ADoor* Door;
 	bool activated;
 	
 public:	
 	// Sets default values for this actor's properties
 	AScanner();
-	void UpdateScreen(AActor* OtherActor, int materialIndex);
-	void OpenDoor();
-	UFUNCTION(BlueprintCallable)
-	bool CheckActivation();
 	
-protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	//Overlap event overrides
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
+
+	//Changes screen material when overlapped with player
+	void UpdateScreen(AActor* OtherActor, int materialIndex);
+
+	//References the closest door and calls it's open function
+	void OpenDoor();
+
+	//returns true if overlapping player
+	UFUNCTION(BlueprintCallable)
+	bool CheckActivation();
 
 };

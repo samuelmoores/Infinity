@@ -29,16 +29,20 @@ class INFINITY_API ADoor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ADoor();
-	void Open();
-	void Move();
-	
-protected:
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
-public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	//Overlap overrides
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+
+	//Sets timer and calls Move()
+	void Open();
+
+	//Lerp from closed to open and back to closed
+	void Move();
 
 };
