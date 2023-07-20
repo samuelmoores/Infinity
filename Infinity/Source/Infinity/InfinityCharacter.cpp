@@ -62,19 +62,14 @@ AInfinityCharacter::AInfinityCharacter()
 	//Initialize shooting boolean
 	shooting = false;
 
-	//Set Particle System
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> SparksFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
-	if(SparksFinder.Succeeded())
-	{
-		Sparks = SparksFinder.Object;
-	}
-
 	//Player starts not interacting
 	interacting = false;
 	hasKeycard = false;
 
 	//Player starts with first weapon selected
 	selectedWeaponIndex = 0;
+
+	//The player can have up to 3 weapons
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
@@ -107,12 +102,7 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 		canInteract = true;
 		Interactable = OtherActor;
 	}
-
-	if(OtherActor->ActorHasTag("Pistol"))
-	{
-		Pistol = Cast<APistol>(OtherActor);
-	}
-		
+	
 }
 
 void AInfinityCharacter::NotifyActorEndOverlap(AActor* OtherActor)
@@ -224,34 +214,15 @@ void AInfinityCharacter::Shoot()
 	{
 		//Player is now shooting
 		shooting = true;
-		if(Pistol)
-			Pistol->SpawnMuzzleFlash();
-
+		
 		//Find where the shot begins and where the shot ends
 		FVector StartLocation = FollowCamera->GetComponentLocation(); 
-		FVector ShotLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
-		FHitResult Hit;
-		FCollisionQueryParams QueryParams;
-
-		if(GetWorld())
+		FVector EndLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
+		
+		if(Pistol)
 		{
-			//Send out the shot and check if it hits something
-			if(GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, ShotLocation, ECC_Pawn, QueryParams))
-			{
-				FTransform SpawnTransform(Hit.ImpactNormal.Rotation(), Hit.ImpactPoint);
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Sparks, SpawnTransform);
-			
-				if(Hit.GetActor()->ActorHasTag("Enemy"))
-				{
-					Enemy = Cast<AEnemy>(Hit.GetActor());
-					if(Enemy)
-					{
-						Enemy->TakeDamage(0.15f, static_cast<FDamageEvent>(UDamageType::StaticClass()), UGameplayStatics::GetPlayerController(GetWorld(), 0), this);
-					}
-					else
-						GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, "No Enemy");
-				}
-			}	
+			Pistol->SpawnMuzzleFlash();
+			Pistol->Shoot(StartLocation, EndLocation);
 		}
 	}
 }
@@ -266,41 +237,40 @@ void AInfinityCharacter::StartInteract()
 {
 	interacting = true;
 
+	//Does the player have something to interact with
 	if(Interactable)
 	{
+		/////////////////Is it a keycard//////////////////////////////
 		if(Interactable->ActorHasTag("KeyCard"))
 		{
 			hasKeycard = true;
 			Interactable->Destroy();
-		}else if(Interactable->ActorHasTag("Scanner"))
+		}
+		
+		////////////////Is it a scanner/////////////////////////////////
+		if(Interactable->ActorHasTag("Scanner"))
 		{
+			//Does the player have a keycard to open the door with the scanner
 			Scanner = Cast<AScanner>(Interactable);
 			if(Scanner && hasKeycard)
 			{
 				Scanner->OpenDoor();
 			}
 		}
-	}
 
-	if(Pistol)
-	{
-		if(hasWeapon)
+		///////////////Is it a pistol/////////////////////////////
+		if(Interactable->ActorHasTag("Pistol"))
 		{
-			Pistol->DetachFromPlayer();
-			Weapons[selectedWeaponIndex] = nullptr;
-			hasWeapon = false;
-		}
-		else
-		{
-			if(Pistol->canPickup)
+			Pistol = Cast<APistol>(Interactable);
+			if(Pistol)
 			{
-				Pistol->AttachToPlayer(this);
-				hasWeapon = true;
-				if(!Weapons[selectedWeaponIndex])
+				if(Pistol->canPickup)
 				{
+					Pistol->AttachToPlayer(this);
+					hasWeapon = true;
+					//Add the pistol to which ever weapon slot they have selected
 					Weapons[selectedWeaponIndex] = Pistol;
 				}
-				
 			}
 		}
 	}
@@ -313,48 +283,30 @@ void AInfinityCharacter::StopInteract()
 
 void AInfinityCharacter::ChangeWeapon()
 {
-	if(selectedWeaponIndex == 0)
+	switch(selectedWeaponIndex)
 	{
-		if(Weapons[selectedWeaponIndex])
+	case 0:
 		{
-			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
-				Pistol->HolsterPistol(this);
+			
 		}
-		selectedWeaponIndex++;
-		if(Weapons[selectedWeaponIndex])
+	case 1:
 		{
-			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
-				Pistol->AttachToPlayer(this);
+			
 		}
-		
-	}else if(selectedWeaponIndex == 1)
-	{
-		if(Weapons[selectedWeaponIndex])
+	case 2:
 		{
-			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
-				Pistol->HolsterPistol(this);
+			
 		}
-		selectedWeaponIndex++;
-		if(Weapons[selectedWeaponIndex])
+	default:
 		{
-			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
-				Pistol->AttachToPlayer(this);
-		}
-		
-	}else if(selectedWeaponIndex == 2)
-	{
-		if(Weapons[selectedWeaponIndex])
-		{
-			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
-				Pistol->HolsterPistol(this);
-		}
-		selectedWeaponIndex = 0;
-		if(Weapons[selectedWeaponIndex])
-		{
-			if(Weapons[selectedWeaponIndex]->ActorHasTag("Pistol"))
-				Pistol->AttachToPlayer(this);
+			
 		}
 	}
+}
+
+void AInfinityCharacter::SetWeapon(int index, TArray<AActor*> Weapons)
+{
+	
 }
 
 

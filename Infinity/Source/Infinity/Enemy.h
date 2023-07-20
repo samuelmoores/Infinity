@@ -46,7 +46,7 @@ public:
 	void ShotDamage(float damageAmount);
 
 
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	float Damage(float Damage);
 
 	UFUNCTION(BlueprintCallable)
 	float SetHealthBar();

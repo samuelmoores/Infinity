@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Pistol.h"
+
+#include "Enemy.h"
 #include "InfinityCharacter.h"
 #include "VectorTypes.h"
 #include "Components/BoxComponent.h"
+#include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -46,6 +49,13 @@ APistol::APistol()
 	LerpSpeed = 50.0f;
 	rotation = 0.0f;
 	rotationSpeed = 75.0f;
+
+	//Set Particle System
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> SparksFinder(TEXT("/Game/StarterContent/Particles/P_Explosion"));
+	if(SparksFinder.Succeeded())
+	{
+		ShotHitParticles = SparksFinder.Object;
+	}
 
 }
 
@@ -125,6 +135,31 @@ void APistol::SpawnMuzzleFlash()
 	SpawnTransform.SetScale3D(MuzzleFlashLocation->GetComponentScale());
 	
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SpawnTransform);
+}
+
+void APistol::Shoot(FVector StartLocation, FVector EndLocation)
+{
+	FHitResult Hit;
+	FCollisionQueryParams QueryParams;
+
+	if(GetWorld())
+	{
+		//Send out the shot and check if it hits something
+		if(GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Pawn, QueryParams))
+		{
+			FTransform SpawnTransform(Hit.ImpactNormal.Rotation(), Hit.ImpactPoint);
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ShotHitParticles, SpawnTransform);
+			
+			if(Hit.GetActor()->ActorHasTag("Enemy"))
+			{
+				AEnemy* Enemy = Cast<AEnemy>(Hit.GetActor());
+				if(Enemy)
+				{
+					Enemy->Damage(0.15f);
+				}
+			}
+		}	
+	}
 }
 
 void APistol::NotifyActorBeginOverlap(AActor* OtherActor)

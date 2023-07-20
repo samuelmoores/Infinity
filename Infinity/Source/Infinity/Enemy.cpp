@@ -53,8 +53,7 @@ void AEnemy::ShotDamage(float damageAmount)
 	}
 }
 
-float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-                         AActor* DamageCauser)
+float AEnemy::Damage(float DamageAmount)
 {
 	health -= DamageAmount;
 	isHit = true;
@@ -77,8 +76,6 @@ float AEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AC
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
 	}
-	
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
 
 float AEnemy::SetHealthBar()

@@ -42,10 +42,6 @@ class AInfinityCharacter : public ACharacter
 	/** Shoot Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* ShootAction;
-	
-	/** Particle System for shot hit location*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Particles, meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* Sparks;
 
 	/** Player must be able to use a scanner*/
 	class AScanner* Scanner;
@@ -138,6 +134,7 @@ public:
 	/*Updates selected weapon for the player HUD*/
 	UFUNCTION(BlueprintCallable)
 	void ChangeWeapon();
+	void SetWeapon(int index, TArray<AActor*> Weapons);
 
 };
 

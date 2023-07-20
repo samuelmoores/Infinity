@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "InfinityCharacter.h"
 #include "Pistol.generated.h"
 
 UCLASS()
@@ -19,16 +20,16 @@ class INFINITY_API APistol : public AActor
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UBoxComponent* BoxCollider;
 
-	//Player reference for attachment
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class AInfinityCharacter* PlayerCharacter;
-
 	//Muzzle flash reference from blueprint with exact location
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* MuzzleFlashLocation;
 
 	//Patricle system to be spawned
 	UParticleSystem* MuzzleFlash;
+	
+	/** Particle System for shot hit location*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Particles, meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* ShotHitParticles;
 
 	//Lerp settings for pistol hover and rotation before being picked up
 	FVector StartingLocationHover;
@@ -66,6 +67,9 @@ public:
 
 	//Create muzzle flash
 	void SpawnMuzzleFlash();
+
+	//Shoot the gun using a Line Trace
+	void Shoot(FVector StartLocation, FVector EndLocation);
 	
 	//Allows references to check if the pistol is currently overlapped and can be picked up
 	bool canPickup;
