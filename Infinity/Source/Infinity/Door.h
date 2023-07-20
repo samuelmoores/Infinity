@@ -17,27 +17,26 @@ class INFINITY_API ADoor : public AInteractable
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Mesh;
 
+	//Is the door open or closed
+	bool isOpen;
+
+	//Settings for moving the door including locations, speed and time
+	FVector openLocation;
+	FVector closedLocation;
+	FTimerHandle Timer;
 	float openSpeed;
 	float openTime;
 	float openTimeLimit;
 	float startTime;
-	FVector openLocation;
-	FVector closedLocation;
-	FTimerHandle Timer;
-	bool isOpen;
-	
+
 public:	
 	// Sets default values for this actor's properties
 	ADoor();
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void BeginPlay() override;
 
 	//Overlap overrides
-	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	//Sets timer and calls Move()
 	void Open();

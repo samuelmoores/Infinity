@@ -13,18 +13,14 @@ ADoor::ADoor()
 	openSpeed = 50.0f;
 	openTime = 0.0f;
 	openTimeLimit = 4.0f;
-
 	isOpen = false;
 }
-// Called when the game starts or when spawned
+
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
-	if(GetWorld())
-	{
-		openLocation = Mesh->GetComponentLocation() + FVector(0,-300.0f, 0);
-		closedLocation = Mesh->GetComponentLocation();
-	}
+	openLocation = Mesh->GetComponentLocation() + FVector(0,-300.0f, 0);
+	closedLocation = Mesh->GetComponentLocation();
 }
 
 void ADoor::Open()
@@ -56,18 +52,11 @@ void ADoor::Move()
 		GetWorldTimerManager().ClearTimer(Timer);
 	}
 }
-
 void ADoor::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	if(OtherActor->ActorHasTag("Player"))
+	if(GetCanInteract())
 		Open();
 }
 
-// Called every frame
-void ADoor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 

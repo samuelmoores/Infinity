@@ -17,4 +17,5 @@ public:
 	AInteractable();
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+	FORCEINLINE const bool* GetCanInteract(){return &canInteract;}
 };
