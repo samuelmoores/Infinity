@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Weapon.h"
 #include "InfinityCharacter.h"
 #include "Pistol.generated.h"
 
 UCLASS()
-class INFINITY_API APistol : public AActor
+class INFINITY_API APistol : public AWeapon
 {
 	GENERATED_BODY()
 

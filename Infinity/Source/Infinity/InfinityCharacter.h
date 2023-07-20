@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Weapon.h"
 #include "InfinityCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -63,7 +64,7 @@ class AInfinityCharacter : public ACharacter
 
 	/**All of the players 3 different weapons that can be carried*/
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	TArray<AActor*> Weapons;
+	TArray<AWeapon*> Weapons;
 
 	/**Which weapon to equip from the weapon HUD, can be toggled through the weapons array*/
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -134,7 +135,7 @@ public:
 	/*Updates selected weapon for the player HUD*/
 	UFUNCTION(BlueprintCallable)
 	void ChangeWeapon();
-	void SetWeapon(int index, TArray<AActor*> Weapons);
+	void SetWeapon(TArray<AWeapon*> WeaponsInventory);
 
 };
 

@@ -46,7 +46,7 @@ public:
 	void ShotDamage(float damageAmount);
 
 
-	float Damage(float Damage);
+	void Damage(float Damage);
 
 	UFUNCTION(BlueprintCallable)
 	float SetHealthBar();

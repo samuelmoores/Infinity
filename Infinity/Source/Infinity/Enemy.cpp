@@ -53,7 +53,7 @@ void AEnemy::ShotDamage(float damageAmount)
 	}
 }
 
-float AEnemy::Damage(float DamageAmount)
+void AEnemy::Damage(float DamageAmount)
 {
 	health -= DamageAmount;
 	isHit = true;

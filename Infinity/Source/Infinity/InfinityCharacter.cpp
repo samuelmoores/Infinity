@@ -283,19 +283,29 @@ void AInfinityCharacter::StopInteract()
 
 void AInfinityCharacter::ChangeWeapon()
 {
+	FString mes = FString::SanitizeFloat(selectedWeaponIndex);
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Magenta, mes);
+
 	switch(selectedWeaponIndex)
 	{
 	case 0:
 		{
-			
+			SetWeapon(Weapons);
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, "0");
+			break;
 		}
 	case 1:
 		{
-			
+			SetWeapon(Weapons);
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, "1");
+			break;
 		}
 	case 2:
 		{
-			
+			SetWeapon(Weapons);
+			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "2");
+
+			break;
 		}
 	default:
 		{
@@ -304,9 +314,40 @@ void AInfinityCharacter::ChangeWeapon()
 	}
 }
 
-void AInfinityCharacter::SetWeapon(int index, TArray<AActor*> Weapons)
+void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 {
+	//Check outgoing inventory slot
+	if(WeaponsInventory[selectedWeaponIndex])
+	{
+		if(WeaponsInventory[selectedWeaponIndex]->ActorHasTag("Pistol"))
+		{
+			if(Pistol)
+				Pistol->HolsterPistol(this);
+			hasWeapon = false;
+		}
+	}
 	
+	//Move selection
+	if(selectedWeaponIndex == 2)
+	{
+		selectedWeaponIndex = 0;
+	}
+	else
+	{
+		selectedWeaponIndex++;
+	}
+	
+	//Check incoming inventory slot
+	if(WeaponsInventory[selectedWeaponIndex])
+	{
+		if(WeaponsInventory[selectedWeaponIndex]->ActorHasTag("Pistol"))
+		{
+			if(Pistol)
+				Pistol->AttachToPlayer(this);
+			hasWeapon = true;
+		}
+	}
+
 }
 
 
