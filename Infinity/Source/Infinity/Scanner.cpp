@@ -20,7 +20,7 @@ AScanner::AScanner()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(BoxCollider);
 
-	activated = false;
+	//activated = false;
 }
 
 // Called when the game starts or when spawned
@@ -34,43 +34,48 @@ void AScanner::BeginPlay()
 void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	Player = Cast<AInfinityCharacter>(OtherActor);
+	//activated = true;
+	
+	//Check if player has keycard
 	if(Player)
 	{
 		if(Player->GetHasKeycard())
-			UpdateScreen(OtherActor, 6);
-		else
-			UpdateScreen(OtherActor, 5);
-	}
-	activated = true;
-	if(GetWorld())
-	{
-		//Get all the doors
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), Doors);
-
-		//Get distance from first door
-		float leastDistance = FVector::Dist(GetActorLocation(), Doors[0]->GetActorLocation());
-
-		//Iterate through all the doors
-		for(int i = 0; i < Doors.Num(); i++)
 		{
-			//Get distance from current door to this scanner
-			float currDistance = FVector::Dist(GetActorLocation(), Doors[i]->GetActorLocation());
-			
-			if(currDistance <= leastDistance)
-			{
-				Door = Cast<ADoor>(Doors[i]);
-				leastDistance = currDistance;
-			}
+			UpdateScreen(OtherActor, 6);
+		}
+		else
+		{
+			UpdateScreen(OtherActor, 5);
 		}
 	}
+	
+	//Get all the doors
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ADoor::StaticClass(), Doors);
+
+	//Get first distance between scanner and door
+	float leastDistance = FVector::Dist(GetActorLocation(), Doors[0]->GetActorLocation());
+
+	//Iterate through all the doors to get all the distances
+	for(int i = 0; i < Doors.Num(); i++)
+	{
+		//save each distance
+		float currDistance = FVector::Dist(GetActorLocation(), Doors[i]->GetActorLocation());
+
+		//check if it's the smallest distance or the same as the first distance found
+		if(currDistance <= leastDistance)
+		{
+			Door = Cast<ADoor>(Doors[i]);
+			leastDistance = currDistance;
+		}
+	}
+	
 }
 
 void AScanner::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
 	UpdateScreen(OtherActor, 4);
-	activated = false;
+	//activated = false;
 }
 
 void AScanner::UpdateScreen(AActor* OtherActor, int materialIndex)
@@ -86,13 +91,9 @@ void AScanner::OpenDoor()
 {
 	if(Door)
 		Door->Open();
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, "No Door to open");
-	}
 }
 
-bool AScanner::CheckActivation(){return activated;}
+//bool AScanner::CheckActivation(){return activated;}
 
 
 

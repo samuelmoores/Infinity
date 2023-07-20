@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Interactable.h"
 #include "Scanner.generated.h"
 
 UCLASS()
-class INFINITY_API AScanner : public AActor
+class INFINITY_API AScanner : public AInteractable
 {
 	GENERATED_BODY()
 
@@ -16,14 +16,11 @@ class INFINITY_API AScanner : public AActor
 
 	UPROPERTY(EditDefaultsOnly)
 	UStaticMeshComponent* Mesh;
-
-	/**Scanner must check if player has keycard to open door*/
-	class AInfinityCharacter* Player;
-
+	
 	/**Scanner must be able to open the doors it's connected to*/
 	TArray<AActor*> Doors;
 	class ADoor* Door;
-	bool activated;
+	//bool activated;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -43,7 +40,7 @@ public:
 	void OpenDoor();
 
 	//returns true if overlapping player
-	UFUNCTION(BlueprintCallable)
-	bool CheckActivation();
+	//UFUNCTION(BlueprintCallable)
+	//bool CheckActivation();
 
 };

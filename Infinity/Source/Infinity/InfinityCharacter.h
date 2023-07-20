@@ -116,8 +116,8 @@ public:
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE const bool* GetHasKeycard() const { return &hasKeycard; }
+
+	FORCEINLINE const bool GetHasKeycard() const { return hasKeycard; }
 
 	//Overlap Event overrides
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;

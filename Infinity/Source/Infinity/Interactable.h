@@ -10,12 +10,21 @@ UCLASS()
 class INFINITY_API AInteractable : public AActor
 {
 	GENERATED_BODY()
+	
+	//Is the interactable overlapping the player?
 	bool canInteract;
+
+protected:
+	class AInfinityCharacter* Player;
 	
 public:	
 	// Sets default values for this actor's properties
 	AInteractable();
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-	FORCEINLINE const bool* GetCanInteract(){return &canInteract;}
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool GetCanInteract() const {return canInteract;}
+	
+
 };
