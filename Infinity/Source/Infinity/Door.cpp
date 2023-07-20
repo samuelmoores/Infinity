@@ -3,8 +3,6 @@
 
 #include "Door.h"
 
-#include "Components/BoxComponent.h"
-
 // Sets default values
 ADoor::ADoor()
 {

@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Interactable.h"
 #include "Door.generated.h"
 
 UCLASS()
-class INFINITY_API ADoor : public AActor
+class INFINITY_API ADoor : public AInteractable
 {
 	GENERATED_BODY()
 
