@@ -70,6 +70,7 @@ void AGun::Tick(float DeltaTime)
 {
 	//Weapon hovers up and down in the level before being picked up
 	Hover(DeltaTime);
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, this->GetName());
 }
 
 void AGun::Hover(float DeltaTime)
@@ -89,7 +90,7 @@ void AGun::Hover(float DeltaTime)
 		}
 		rotation +=DeltaTime;
 		Mesh->SetRelativeRotation(FRotator(0.0f, rotation * rotationSpeed, 0.0f));
-		Mesh->SetWorldScale3D(FVector(3.0f, 3.0f, 3.0f));
+		Mesh->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
 	}
 }
 
@@ -110,7 +111,10 @@ void AGun::NotifyActorEndOverlap(AActor* OtherActor)
 void AGun::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
 {
 	//Get the players mesh to access the hand socket and snap the pistol actor to it
-	AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_SOC");
+	if(this->ActorHasTag("Pistol"))
+		AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_pistol_SOC");
+	if(this->ActorHasTag("Rifle"))
+		AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_rifle_SOC");
 	BoxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	attachedToPlayer = true;
 	Mesh->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));

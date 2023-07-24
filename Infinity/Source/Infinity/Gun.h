@@ -76,7 +76,7 @@ public:
 	//Create muzzle flash
 	void SpawnMuzzleFlash();
 	
-	//Allows references to check if the pistol is currently overlapped and can be picked up
+	//Allows references to check if the pistol is currently overlapped by the player and can be picked up
 	bool canPickup;
 	
 };

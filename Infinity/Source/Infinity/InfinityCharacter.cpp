@@ -258,8 +258,8 @@ void AInfinityCharacter::StartInteract()
 			}
 		}
 
-		///////////////Is it a pistol/////////////////////////////
-		if(Interactable->ActorHasTag("Pistol"))
+		///////////////Is it a pistol or rifle/////////////////////////////
+		if(Interactable->ActorHasTag("Pistol") || Interactable->ActorHasTag("Rifle"))
 		{
 			Pistol = Cast<AGun>(Interactable);
 			if(Pistol)
