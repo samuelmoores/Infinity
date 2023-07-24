@@ -3,12 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Weapon.h"
 #include "InfinityCharacter.h"
-#include "Pistol.generated.h"
+#include "Weapon.h"
+#include "Gun.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class INFINITY_API APistol : public AWeapon
+class INFINITY_API AGun : public AWeapon
 {
 	GENERATED_BODY()
 
@@ -24,12 +27,12 @@ class INFINITY_API APistol : public AWeapon
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* MuzzleFlashLocation;
 
-	//Patricle system to be spawned
+	//Particle system to be spawned
 	UParticleSystem* MuzzleFlash;
 	
 	/** Particle System for shot hit location*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Particles, meta = (AllowPrivateAccess = "true"))
-	UParticleSystem* ShotHitParticles;
+	UParticleSystem* HitParticles;
 
 	//Lerp settings for pistol hover and rotation before being picked up
 	FVector StartingLocationHover;
@@ -47,33 +50,33 @@ class INFINITY_API APistol : public AWeapon
 
 public:
 	// Sets default values for this actor's properties
-	APistol();
+	AGun();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-	
+
 	//The pistol mesh floats up and down before being picked up
 	void Hover(float DeltaTime);
 
+	//Overlap Overrides
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+	
 	//Handles attachments to the player
 	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter);
 	void DetachFromPlayer();
-	void HolsterPistol(AInfinityCharacter* AttachPlayerCharacter);
-
-	//Create muzzle flash
-	void SpawnMuzzleFlash();
+	void UnequipGun(AInfinityCharacter* AttachPlayerCharacter);
 
 	//Shoot the gun using a Line Trace
 	void Shoot(FVector StartLocation, FVector EndLocation);
+	
+	//Create muzzle flash
+	void SpawnMuzzleFlash();
 	
 	//Allows references to check if the pistol is currently overlapped and can be picked up
 	bool canPickup;
 	
 };
-
-

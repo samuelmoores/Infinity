@@ -11,7 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "KeyCard.h"
-#include "Pistol.h"
+#include "Gun.h"
 #include "Scanner.h"
 #include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
@@ -261,7 +261,7 @@ void AInfinityCharacter::StartInteract()
 		///////////////Is it a pistol/////////////////////////////
 		if(Interactable->ActorHasTag("Pistol"))
 		{
-			Pistol = Cast<APistol>(Interactable);
+			Pistol = Cast<AGun>(Interactable);
 			if(Pistol)
 			{
 				if(Pistol->canPickup)
@@ -322,7 +322,7 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 		if(WeaponsInventory[selectedWeaponIndex]->ActorHasTag("Pistol"))
 		{
 			if(Pistol)
-				Pistol->HolsterPistol(this);
+				Pistol->UnequipGun(this);
 			hasWeapon = false;
 		}
 	}
