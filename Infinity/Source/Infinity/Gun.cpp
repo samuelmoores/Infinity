@@ -21,7 +21,6 @@ AGun::AGun()
 	//Attach Box Collider to Pistol Mesh
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
 	BoxCollider->SetupAttachment((Mesh));
-	BoxCollider->SetGenerateOverlapEvents(true);
 
 	//Pistol starts hovering up and is not attached to the player
 	offset = 1;
@@ -70,7 +69,6 @@ void AGun::Tick(float DeltaTime)
 {
 	//Weapon hovers up and down in the level before being picked up
 	Hover(DeltaTime);
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, this->GetName());
 }
 
 void AGun::Hover(float DeltaTime)
@@ -108,12 +106,12 @@ void AGun::NotifyActorEndOverlap(AActor* OtherActor)
 		canPickup = false;
 }
 
-void AGun::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter)
+void AGun::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter, AWeapon* Weapon)
 {
 	//Get the players mesh to access the hand socket and snap the pistol actor to it
-	if(this->ActorHasTag("Pistol"))
+	if(Weapon->ActorHasTag("Pistol"))
 		AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_pistol_SOC");
-	if(this->ActorHasTag("Rifle"))
+	if(Weapon->ActorHasTag("Rifle"))
 		AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "hand_r_rifle_SOC");
 	BoxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	attachedToPlayer = true;
@@ -137,7 +135,7 @@ void AGun::UnequipGun(AInfinityCharacter* AttachPlayerCharacter)
 		AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "pelvis_SOC");
 	else
 	{
-		
+		AttachToComponent(AttachPlayerCharacter->GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, "spine02_SOC");
 	}
 }
 

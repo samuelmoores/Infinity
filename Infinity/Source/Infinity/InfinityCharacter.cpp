@@ -219,10 +219,10 @@ void AInfinityCharacter::Shoot()
 		FVector StartLocation = FollowCamera->GetComponentLocation(); 
 		FVector EndLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
 		
-		if(Pistol)
+		if(Gun)
 		{
-			Pistol->SpawnMuzzleFlash();
-			Pistol->Shoot(StartLocation, EndLocation);
+			Gun->SpawnMuzzleFlash();
+			Gun->Shoot(StartLocation, EndLocation);
 		}
 	}
 }
@@ -261,15 +261,19 @@ void AInfinityCharacter::StartInteract()
 		///////////////Is it a pistol or rifle/////////////////////////////
 		if(Interactable->ActorHasTag("Pistol") || Interactable->ActorHasTag("Rifle"))
 		{
-			Pistol = Cast<AGun>(Interactable);
-			if(Pistol)
+			if(Weapons[selectedWeaponIndex] == nullptr)
 			{
-				if(Pistol->canPickup)
+				Gun = Cast<AGun>(Interactable);
+				if(Gun)
 				{
-					Pistol->AttachToPlayer(this);
-					hasWeapon = true;
-					//Add the pistol to which ever weapon slot they have selected
-					Weapons[selectedWeaponIndex] = Pistol;
+					if(Gun->canPickup)
+					{
+						Gun->AttachToPlayer(this, Gun);
+						hasWeapon = true;
+						//Add the pistol to which ever weapon slot they have selected
+						Weapons[selectedWeaponIndex] = Gun;
+						Weapons[selectedWeaponIndex]->SetActorEnableCollision(false);
+					}
 				}
 			}
 		}
@@ -283,28 +287,21 @@ void AInfinityCharacter::StopInteract()
 
 void AInfinityCharacter::ChangeWeapon()
 {
-	FString mes = FString::SanitizeFloat(selectedWeaponIndex);
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Magenta, mes);
-
 	switch(selectedWeaponIndex)
 	{
 	case 0:
 		{
 			SetWeapon(Weapons);
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red, "0");
 			break;
 		}
 	case 1:
 		{
 			SetWeapon(Weapons);
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Green, "1");
 			break;
 		}
 	case 2:
 		{
 			SetWeapon(Weapons);
-			GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Yellow, "2");
-
 			break;
 		}
 	default:
@@ -319,15 +316,12 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 	//Check outgoing inventory slot
 	if(WeaponsInventory[selectedWeaponIndex])
 	{
-		if(WeaponsInventory[selectedWeaponIndex]->ActorHasTag("Pistol"))
-		{
-			if(Pistol)
-				Pistol->UnequipGun(this);
-			hasWeapon = false;
-		}
+		Gun = Cast<AGun>(Weapons[selectedWeaponIndex]);
+		if(Gun)
+			Gun->UnequipGun(this);
+		hasWeapon = false;
 	}
-	
-	//Move selection
+	//Move selection clamp between 0 and 2
 	if(selectedWeaponIndex == 2)
 	{
 		selectedWeaponIndex = 0;
@@ -336,18 +330,18 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 	{
 		selectedWeaponIndex++;
 	}
-	
 	//Check incoming inventory slot
 	if(WeaponsInventory[selectedWeaponIndex])
 	{
-		if(WeaponsInventory[selectedWeaponIndex]->ActorHasTag("Pistol"))
-		{
-			if(Pistol)
-				Pistol->AttachToPlayer(this);
-			hasWeapon = true;
-		}
+		Gun = Cast<AGun>(Weapons[selectedWeaponIndex]);
+		if(Gun)
+			Gun->AttachToPlayer(this, Gun);
+		hasWeapon = true;
 	}
-
+	else
+	{
+		hasWeapon = false;
+	}
 }
 
 

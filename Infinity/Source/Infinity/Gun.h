@@ -45,9 +45,6 @@ class INFINITY_API AGun : public AWeapon
 	//Controls whether the mesh hovers up or down
 	int offset;
 
-	//Is the pistol connected to the player
-	bool attachedToPlayer;
-
 public:
 	// Sets default values for this actor's properties
 	AGun();
@@ -66,7 +63,7 @@ public:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 	
 	//Handles attachments to the player
-	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter);
+	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter, AWeapon* Weapon);
 	void DetachFromPlayer();
 	void UnequipGun(AInfinityCharacter* AttachPlayerCharacter);
 
@@ -78,5 +75,9 @@ public:
 	
 	//Allows references to check if the pistol is currently overlapped by the player and can be picked up
 	bool canPickup;
+
+	//Is the pistol connected to the player
+	UPROPERTY(BlueprintReadOnly)
+	bool attachedToPlayer;
 	
 };

@@ -53,7 +53,7 @@ class AInfinityCharacter : public ACharacter
 
 	/** Pistol Reference */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapons, meta = (AllowPrivateAccess = "true"))
-	class AGun* Pistol;
+	class AGun* Gun;
 
 	/**Player makes specific decisions for each type of interactable*/
 	TArray<AActor*> Interactables;
