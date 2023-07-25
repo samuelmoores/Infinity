@@ -88,7 +88,7 @@ void AGun::Hover(float DeltaTime)
 		}
 		rotation +=DeltaTime;
 		Mesh->SetRelativeRotation(FRotator(0.0f, rotation * rotationSpeed, 0.0f));
-		Mesh->SetWorldScale3D(FVector(2.0f, 2.0f, 2.0f));
+		Mesh->SetWorldScale3D(FVector(1.5f, 1.5f, 1.5f));
 	}
 }
 

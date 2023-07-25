@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "InfinityCharacter.h"
-#include "Enemy.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -10,10 +9,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "KeyCard.h"
 #include "Gun.h"
 #include "Scanner.h"
-#include "Engine/DamageEvents.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
 
@@ -55,6 +52,8 @@ AInfinityCharacter::AInfinityCharacter()
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	Interactable = nullptr;
 
 	//Player does not start with a weapon
 	hasWeapon = false;
@@ -238,7 +237,7 @@ void AInfinityCharacter::StartInteract()
 	interacting = true;
 
 	//Does the player have something to interact with
-	if(Interactable)
+	if(Interactable && canInteract)
 	{
 		/////////////////Is it a keycard//////////////////////////////
 		if(Interactable->ActorHasTag("KeyCard"))
