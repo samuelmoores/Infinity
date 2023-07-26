@@ -49,6 +49,10 @@ AInfinityCharacter::AInfinityCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	Knife = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Knife"));
+	Knife->SetupAttachment(GetMesh());
+	Knife->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "hand_r_knife_SOC");
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -116,7 +120,6 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 			health = 0.0f;
 		}
 	}
-	
 }
 
 void AInfinityCharacter::NotifyActorEndOverlap(AActor* OtherActor)
@@ -343,7 +346,6 @@ void AInfinityCharacter::ChangeWeapon()
 
 void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 {
-	
 	//Check outgoing inventory slot
 	if(WeaponsInventory[selectedWeaponIndex])
 	{
@@ -351,14 +353,15 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 		if(Gun)
 			Gun->UnequipGun(this);
 		hasWeapon = false;
-	}else if(selectedWeaponIndex == 0)
+	}//if the knife was in the outgoing inventory slot
+	else if(selectedWeaponIndex == 0)
 	{
-		hasKnife = false;
+		Knife->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "calf_l_SOC");
 	}
 	//Move selection clamp between 0 and 2
 	if(selectedWeaponIndex == 3)
 	{
-		hasKnife = true;
+		Knife->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "hand_r_knife_SOC");
 		selectedWeaponIndex = 0;
 	}
 	else
