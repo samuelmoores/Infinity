@@ -74,6 +74,9 @@ AInfinityCharacter::AInfinityCharacter()
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
 
+	//Set health bar
+	health = 1.0f;
+
 }
 
 void AInfinityCharacter::BeginPlay()
@@ -102,6 +105,8 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 		canInteract = true;
 		Interactable = OtherActor;
 	}
+	if(OtherActor->ActorHasTag("HitboxEnemy"))
+		health -= 0.15f;
 	
 }
 
@@ -368,6 +373,11 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 void AInfinityCharacter::Dodge()
 {
 	isDodging = true;
+}
+
+float AInfinityCharacter::GetHealth()
+{
+	return health;
 }
 
 

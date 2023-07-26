@@ -28,57 +28,6 @@ AEnemy::AEnemy()
 
 }
 
-void AEnemy::ShotDamage(float damageAmount)
-{
-	health -= damageAmount;
-	isHit = true;
-	GetCharacterMovement()->StopActiveMovement();
-
-	
-	if(health < 0.1f)
-	{
-		if(hasKeycard)
-		{
-		
-		}
-		
-		health = 0.0f;
-		dead = true;
-		GetCharacterMovement()->DisableMovement();
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
-	}
-}
-
-void AEnemy::Damage(float DamageAmount)
-{
-	health -= DamageAmount;
-	isHit = true;
-	GetCharacterMovement()->StopActiveMovement();
-
-	if(health < 0.1f)
-	{
-		if(hasKeycard)
-		{
-			
-		}
-		
-		health = 0.0f;
-		dead = true;
-		GetCharacterMovement()->DisableMovement();
-		GetMesh()->SetSimulatePhysics(true);
-		GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-		GetMesh()->AddImpulse(GetActorForwardVector()*-2500, NAME_None, true);
-		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
-	}
-}
-
-float AEnemy::SetHealthBar()
-{
-	return health;
-}
-
 // Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
@@ -95,8 +44,6 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 		hit = true;
 	}
 
-	
-	
 }
 
 void AEnemy::NotifyActorEndOverlap(AActor* OtherActor)
@@ -124,12 +71,56 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+void AEnemy::ShotDamage(float damageAmount)
+{
+	health -= damageAmount;
+	isHit = true;
+	GetCharacterMovement()->StopActiveMovement();
+	if(health < 0.1f)
+	{
+		if(hasKeycard)
+		{
+		}
+		health = 0.0f;
+		dead = true;
+		GetCharacterMovement()->DisableMovement();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
+	}
+}
+
+void AEnemy::Damage(float DamageAmount)
+{
+	health -= DamageAmount;
+	isHit = true;
+	GetCharacterMovement()->StopActiveMovement();
+	if(health < 0.1f)
+	{
+		if(hasKeycard)
+		{
+		}
+		health = 0.0f;
+		dead = true;
+		GetCharacterMovement()->DisableMovement();
+		GetMesh()->SetSimulatePhysics(true);
+		GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+		GetMesh()->AddImpulse(GetActorForwardVector()*-2500, NAME_None, true);
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		GetWorldTimerManager().SetTimer(Timer, this, &AEnemy::Death, GetWorld()->GetDeltaSeconds(), true);
+	}
+}
+
+float AEnemy::SetHealthBar()
+{
+	return health;
+}
+
+
+
 void AEnemy::Attack()
 {
-
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "Attack");
-
-	
+	attacking = true;
 }
 
 void AEnemy::Death()

@@ -100,6 +100,9 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
 	bool isDodging;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	float health;
+
 public:
 	AInfinityCharacter();
 		
@@ -143,7 +146,12 @@ public:
 	void ChangeWeapon();
 	void SetWeapon(TArray<AWeapon*> WeaponsInventory);
 
+	//Doge rolling with forward impulse
 	void Dodge();
+
+	//Update health bar on HUD
+	UFUNCTION(BlueprintCallable)
+	float GetHealth();
 
 };
 
