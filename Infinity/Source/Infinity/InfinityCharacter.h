@@ -94,6 +94,9 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool hasKeycard;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	bool hasKnife;
+
 public:
 	AInfinityCharacter();
 		

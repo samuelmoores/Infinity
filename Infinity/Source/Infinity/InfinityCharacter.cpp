@@ -72,6 +72,7 @@ AInfinityCharacter::AInfinityCharacter()
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
 	Weapons.Add(nullptr);
+	Weapons.Add(nullptr);
 
 }
 
@@ -260,12 +261,16 @@ void AInfinityCharacter::StartInteract()
 		///////////////Is it a pistol or rifle/////////////////////////////
 		if(Interactable->ActorHasTag("Pistol") || Interactable->ActorHasTag("Rifle"))
 		{
+			if(selectedWeaponIndex == 0)
+			{
+				return;
+			}
 			if(Weapons[selectedWeaponIndex] == nullptr)
 			{
 				Gun = Cast<AGun>(Interactable);
 				if(Gun)
 				{
-					if(Gun->canPickup)
+					if(Gun->GetCanInteract())
 					{
 						Gun->AttachToPlayer(this, Gun);
 						hasWeapon = true;
@@ -303,6 +308,11 @@ void AInfinityCharacter::ChangeWeapon()
 			SetWeapon(Weapons);
 			break;
 		}
+	case 3:
+		{
+			SetWeapon(Weapons);
+			break;
+		}
 	default:
 		{
 			
@@ -312,6 +322,7 @@ void AInfinityCharacter::ChangeWeapon()
 
 void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 {
+	
 	//Check outgoing inventory slot
 	if(WeaponsInventory[selectedWeaponIndex])
 	{
@@ -319,10 +330,14 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 		if(Gun)
 			Gun->UnequipGun(this);
 		hasWeapon = false;
+	}else if(selectedWeaponIndex == 0)
+	{
+		hasKnife = false;
 	}
 	//Move selection clamp between 0 and 2
-	if(selectedWeaponIndex == 2)
+	if(selectedWeaponIndex == 3)
 	{
+		hasKnife = true;
 		selectedWeaponIndex = 0;
 	}
 	else

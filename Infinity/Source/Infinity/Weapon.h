@@ -3,24 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Interactable.h"
 #include "Weapon.generated.h"
 
 UCLASS()
-class INFINITY_API AWeapon : public AActor
+class INFINITY_API AWeapon : public AInteractable
 {
 	GENERATED_BODY()
-	
+
 public:	
 	// Sets default values for this actor's properties
 	AWeapon();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//Handles attachments to the player
+	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter, AWeapon* Weapon);
+	void DetachFromPlayer();
 
 };

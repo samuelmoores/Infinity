@@ -4,10 +4,8 @@
 #include "Enemy.h"
 
 #include "HitBox.h"
-#include "KeyCard.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Engine/DamageEvents.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -41,8 +39,7 @@ void AEnemy::ShotDamage(float damageAmount)
 	{
 		if(hasKeycard)
 		{
-			FActorSpawnParameters spawnParams;
-			GetWorld()->SpawnActor<AKeyCard>(Keycard, GetActorLocation(), GetActorRotation());
+		
 		}
 		
 		health = 0.0f;
@@ -63,8 +60,7 @@ void AEnemy::Damage(float DamageAmount)
 	{
 		if(hasKeycard)
 		{
-			FActorSpawnParameters spawnParams;
-			GetWorld()->SpawnActor<AKeyCard>(Keycard, GetActorLocation(), GetActorRotation());
+			
 		}
 		
 		health = 0.0f;

@@ -39,13 +39,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool isHit;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AKeyCard> Keycard;
-
 	UFUNCTION(BlueprintCallable)
 	void ShotDamage(float damageAmount);
-
-
+	
 	void Damage(float Damage);
 
 	UFUNCTION(BlueprintCallable)
@@ -57,17 +53,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Death();
 
-	
-
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
-
-	
 
 public:	
 	// Called every frame

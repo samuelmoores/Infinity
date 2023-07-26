@@ -14,13 +14,6 @@ AScanner::AScanner()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
-	BoxCollider->SetupAttachment(RootComponent);
-
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(BoxCollider);
-
-	//activated = false;
 }
 
 // Called when the game starts or when spawned
@@ -34,7 +27,6 @@ void AScanner::BeginPlay()
 void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
-	//activated = true;
 	
 	//Check if player has keycard
 	if(Player)
@@ -75,7 +67,7 @@ void AScanner::NotifyActorEndOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorEndOverlap(OtherActor);
 	UpdateScreen(OtherActor, 4);
-	//activated = false;
+
 }
 
 void AScanner::UpdateScreen(AActor* OtherActor, int materialIndex)
@@ -92,8 +84,5 @@ void AScanner::OpenDoor()
 	if(Door)
 		Door->Open();
 }
-
-//bool AScanner::CheckActivation(){return activated;}
-
 
 

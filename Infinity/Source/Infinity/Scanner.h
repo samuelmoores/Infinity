@@ -11,12 +11,6 @@ class INFINITY_API AScanner : public AInteractable
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly)
-	class UBoxComponent* BoxCollider;
-
-	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* Mesh;
-	
 	/**Scanner must be able to open the doors it's connected to*/
 	TArray<AActor*> Doors;
 	class ADoor* Door;

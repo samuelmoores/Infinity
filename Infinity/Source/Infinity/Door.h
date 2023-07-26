@@ -10,13 +10,7 @@ UCLASS()
 class INFINITY_API ADoor : public AInteractable
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly)
-	class UBoxComponent* BoxCollider;
-
-	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* Mesh;
-
+	
 	//Is the door open or closed
 	bool isOpen;
 
