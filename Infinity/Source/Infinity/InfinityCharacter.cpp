@@ -106,7 +106,16 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 		Interactable = OtherActor;
 	}
 	if(OtherActor->ActorHasTag("HitboxEnemy"))
+	{
 		health -= 0.15f;
+		if(health <= 0.0f)
+		{
+			isDead = true;
+			GetCharacterMovement()->DisableMovement();
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			health = 0.0f;
+		}
+	}
 	
 }
 

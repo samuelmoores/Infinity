@@ -103,6 +103,9 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
 	float health;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	bool isDead;
+
 public:
 	AInfinityCharacter();
 		
