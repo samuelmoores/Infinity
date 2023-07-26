@@ -51,8 +51,7 @@ AInfinityCharacter::AInfinityCharacter()
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 	Knife = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Knife"));
-	Knife->SetupAttachment(GetMesh());
-	Knife->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, "hand_r_knife_SOC");
+	Knife->SetupAttachment(GetMesh(), "hand_r_knife_SOC");
 	
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -232,7 +231,7 @@ void AInfinityCharacter::StopAim()
 
 void AInfinityCharacter::Shoot()
 {
-	if(aiming && hasWeapon)
+	if(aiming && hasWeapon && selectedWeaponIndex != 0)
 	{
 		//Player is now shooting
 		shooting = true;
@@ -246,12 +245,18 @@ void AInfinityCharacter::Shoot()
 			Gun->SpawnMuzzleFlash();
 			Gun->Shoot(StartLocation, EndLocation);
 		}
-	}
+	}//if player is holding knife which is in the first weapon index
+	else if(selectedWeaponIndex == 0)
+		attacking = true;
 }
 
 void AInfinityCharacter::StopShoot()
 {
 	shooting = false;
+
+	//if player is holding knife which is in the first weapon index
+	if(selectedWeaponIndex == 0)
+		attacking = false;
 
 }
 

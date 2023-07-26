@@ -97,9 +97,6 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	bool hasKeycard;
 
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
-	bool hasKnife;
-
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
 	bool isDodging;
 
@@ -108,6 +105,9 @@ class AInfinityCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
 	bool isDead;
+
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	bool attacking;
 
 public:
 	AInfinityCharacter();
