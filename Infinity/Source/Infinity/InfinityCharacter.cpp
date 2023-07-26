@@ -253,11 +253,6 @@ void AInfinityCharacter::Shoot()
 void AInfinityCharacter::StopShoot()
 {
 	shooting = false;
-
-	//if player is holding knife which is in the first weapon index
-	if(selectedWeaponIndex == 0)
-		attacking = false;
-
 }
 
 void AInfinityCharacter::StartInteract()

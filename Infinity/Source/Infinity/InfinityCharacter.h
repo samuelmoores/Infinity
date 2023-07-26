@@ -106,7 +106,7 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
 	bool isDead;
 
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
 	bool attacking;
 
 public:
