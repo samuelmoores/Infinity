@@ -188,13 +188,16 @@ void AInfinityCharacter::Look(const FInputActionValue& Value)
 
 void AInfinityCharacter::StartAim()
 {
-	aiming = true;
-	GetCharacterMovement()->MaxWalkSpeed = 150.0f;
-	CameraBoom->TargetArmLength = 75.0f;
-	CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 30.0f);
-	FollowCamera->bUsePawnControlRotation = true;
-	GetCharacterMovement()->bOrientRotationToMovement = false;
-	bUseControllerRotationYaw = true;
+	if(hasWeapon)
+	{
+		aiming = true;
+		GetCharacterMovement()->MaxWalkSpeed = 150.0f;
+		CameraBoom->TargetArmLength = 75.0f;
+		CameraBoom->SocketOffset = FVector(0.0f, 50.0f, 30.0f);
+		FollowCamera->bUsePawnControlRotation = true;
+		GetCharacterMovement()->bOrientRotationToMovement = false;
+		bUseControllerRotationYaw = true;
+	}
 }
 
 void AInfinityCharacter::StopAim()
@@ -261,10 +264,12 @@ void AInfinityCharacter::StartInteract()
 		///////////////Is it a pistol or rifle/////////////////////////////
 		if(Interactable->ActorHasTag("Pistol") || Interactable->ActorHasTag("Rifle"))
 		{
+			//Player always has knife in first slot and cannot exchange it with a gun
 			if(selectedWeaponIndex == 0)
 			{
 				return;
 			}
+			//Check if the selceted slot is empty
 			if(Weapons[selectedWeaponIndex] == nullptr)
 			{
 				Gun = Cast<AGun>(Interactable);
@@ -272,9 +277,9 @@ void AInfinityCharacter::StartInteract()
 				{
 					if(Gun->GetCanInteract())
 					{
+						//If it is, attach it to the player and add it to the inventory UI
 						Gun->AttachToPlayer(this, Gun);
 						hasWeapon = true;
-						//Add the pistol to which ever weapon slot they have selected
 						Weapons[selectedWeaponIndex] = Gun;
 						Weapons[selectedWeaponIndex]->SetActorEnableCollision(false);
 					}
