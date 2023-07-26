@@ -97,6 +97,9 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"));
 	bool hasKnife;
 
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
+	bool isDodging;
+
 public:
 	AInfinityCharacter();
 		
@@ -139,6 +142,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangeWeapon();
 	void SetWeapon(TArray<AWeapon*> WeaponsInventory);
+
+	void Dodge();
 
 };
 

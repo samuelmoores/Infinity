@@ -144,7 +144,9 @@ void AInfinityCharacter::SetupPlayerInputComponent(class UInputComponent* Player
 
 		//Changing Weapons
 		PlayerInputComponent->BindAction("ChangeWeapon", IE_Pressed, this, &AInfinityCharacter::ChangeWeapon);
-		
+
+		//Dodging
+		PlayerInputComponent->BindAction("Dodge", IE_Pressed, this, &AInfinityCharacter::Dodge);
 	}
 
 }
@@ -361,6 +363,11 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 	{
 		hasWeapon = false;
 	}
+}
+
+void AInfinityCharacter::Dodge()
+{
+	isDodging = true;
 }
 
 
