@@ -33,9 +33,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	bool hasKeycard;
 
-	UPROPERTY(BlueprintReadWrite)
-	bool isHit;
-
 	// Sets default values for this character's properties
 	AEnemy();
 

@@ -23,8 +23,7 @@ AEnemy::AEnemy()
 	dead = false;
 	destroyLifetime = 15.0f;
 	hasKeycard = false;
-	isHit = false;
-
+	hit = false;
 
 }
 
@@ -42,7 +41,7 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 	if(OtherActor->ActorHasTag("HitboxPlayer"))
 	{
 		if(!attacking)
-			isHit = true;
+			hit = true;
 		health -= 0.15f;
 		if(health <= 0.0f)
 		{
@@ -84,7 +83,7 @@ void AEnemy::ShotDamage(float damageAmount)
 {
 	health -= damageAmount;
 	if(!attacking)
-		isHit = true;
+		hit = true;
 	GetCharacterMovement()->StopActiveMovement();
 	if(health < 0.1f)
 	{
@@ -102,7 +101,7 @@ void AEnemy::ShotDamage(float damageAmount)
 void AEnemy::Damage(float DamageAmount)
 {
 	health -= DamageAmount;
-	isHit = true;
+	hit = true;
 	GetCharacterMovement()->StopActiveMovement();
 	if(health < 0.1f)
 	{

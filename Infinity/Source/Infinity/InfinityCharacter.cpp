@@ -83,6 +83,8 @@ AInfinityCharacter::AInfinityCharacter()
 
 	isHit = false;
 
+	attacking = false;
+
 }
 
 void AInfinityCharacter::BeginPlay()
@@ -113,9 +115,17 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 	if(OtherActor->ActorHasTag("HitboxEnemy"))
 	{
-		if(!attacking)
+		if(attacking || isDodging)
+		{
+			isHit = false;
+			health -= 0.15f;
+		}
+		else
+		{
 			isHit = true;
-		health -= 0.15f;
+			health -= 0.35f;
+		}
+		
 		if(health <= 0.0f)
 		{
 			isDead = true;
@@ -284,11 +294,11 @@ void AInfinityCharacter::StartInteract()
 		///////////////Is it a pistol or rifle/////////////////////////////
 		if(Interactable->ActorHasTag("Pistol") || Interactable->ActorHasTag("Rifle"))
 		{
-			//Player always has knife in first slot and cannot exchange it with a gun
 			if(selectedWeaponIndex == 0)
 			{
-				return;
+				ChangeWeapon();
 			}
+				
 			//Check if the selceted slot is empty
 			if(Weapons[selectedWeaponIndex] == nullptr)
 			{
