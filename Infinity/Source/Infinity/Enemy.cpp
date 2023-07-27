@@ -39,9 +39,18 @@ void AEnemy::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
 
-	if(OtherActor->ActorHasTag("Hitbox"))
+	if(OtherActor->ActorHasTag("HitboxPlayer"))
 	{
-		hit = true;
+		if(!attacking)
+			isHit = true;
+		health -= 0.15f;
+		if(health <= 0.0f)
+		{
+			dead = true;
+			health = 0.0f;
+			GetCharacterMovement()->DisableMovement();
+			GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
 	}
 
 }
@@ -74,7 +83,8 @@ void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AEnemy::ShotDamage(float damageAmount)
 {
 	health -= damageAmount;
-	isHit = true;
+	if(!attacking)
+		isHit = true;
 	GetCharacterMovement()->StopActiveMovement();
 	if(health < 0.1f)
 	{

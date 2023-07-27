@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Gun.h"
+#include "HitBox.h"
 #include "Scanner.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
@@ -80,6 +81,8 @@ AInfinityCharacter::AInfinityCharacter()
 	//Set health bar
 	health = 1.0f;
 
+	isHit = false;
+
 }
 
 void AInfinityCharacter::BeginPlay()
@@ -110,6 +113,8 @@ void AInfinityCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 	if(OtherActor->ActorHasTag("HitboxEnemy"))
 	{
+		if(!attacking)
+			isHit = true;
 		health -= 0.15f;
 		if(health <= 0.0f)
 		{
@@ -173,7 +178,7 @@ void AInfinityCharacter::Move(const FInputActionValue& Value)
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
-	if (Controller != nullptr)
+	if (Controller != nullptr && !isHit)
 	{
 		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -235,19 +240,15 @@ void AInfinityCharacter::Shoot()
 	{
 		//Player is now shooting
 		shooting = true;
-		
 		//Find where the shot begins and where the shot ends
 		FVector StartLocation = FollowCamera->GetComponentLocation(); 
 		FVector EndLocation = FollowCamera->GetComponentLocation() + FollowCamera->GetForwardVector() * 10000;
-		
 		if(Gun)
 		{
 			Gun->SpawnMuzzleFlash();
 			Gun->Shoot(StartLocation, EndLocation);
 		}
-	}//if player is holding knife which is in the first weapon index
-	else if(selectedWeaponIndex == 0)
-		attacking = true;
+	}
 }
 
 void AInfinityCharacter::StopShoot()
@@ -385,6 +386,14 @@ void AInfinityCharacter::SetWeapon(TArray<AWeapon*> WeaponsInventory)
 void AInfinityCharacter::Dodge()
 {
 	isDodging = true;
+}
+
+void AInfinityCharacter::Attack()
+{
+	if(selectedWeaponIndex == 0)
+	{
+		attacking = true;
+	}
 }
 
 float AInfinityCharacter::GetHealth()

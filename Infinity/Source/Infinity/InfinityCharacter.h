@@ -109,6 +109,9 @@ class AInfinityCharacter : public ACharacter
 	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
 	bool attacking;
 
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"));
+	bool isHit;
+
 public:
 	AInfinityCharacter();
 		
@@ -154,6 +157,9 @@ public:
 
 	//Doge rolling with forward impulse
 	void Dodge();
+
+	UFUNCTION(BlueprintCallable)
+	void Attack();
 
 	//Update health bar on HUD
 	UFUNCTION(BlueprintCallable)
