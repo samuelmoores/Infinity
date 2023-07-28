@@ -143,6 +143,12 @@ void AInfinityCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 		canInteract = false;
 }
 
+void AInfinityCharacter::Jump()
+{
+	if(!attacking)
+		Super::Jump();
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 

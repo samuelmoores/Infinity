@@ -138,6 +138,8 @@ public:
 	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	void NotifyActorEndOverlap(AActor* OtherActor) override;
 
+	virtual void Jump() override;
+
 	/** Aiming */
 	void StartAim();
 	void StopAim();

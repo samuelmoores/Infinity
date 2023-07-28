@@ -124,8 +124,6 @@ float AEnemy::SetHealthBar()
 	return health;
 }
 
-
-
 void AEnemy::Attack()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, "Attack");
