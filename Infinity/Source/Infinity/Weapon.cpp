@@ -10,8 +10,18 @@
 AWeapon::AWeapon()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
+}
+
+void AWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void AWeapon::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 
 void AWeapon::AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter, AWeapon* Weapon)

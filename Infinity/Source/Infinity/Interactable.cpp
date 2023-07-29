@@ -8,6 +8,8 @@
 // Sets default values
 AInteractable::AInteractable()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	//Setup Pistol MEsh for Blueprint
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
@@ -22,25 +24,25 @@ AInteractable::AInteractable()
 	LerpSpeed = 50.0f;
 	rotation = 0.0f;
 	rotationSpeed = 75.0f;
-	canHover = false;
 }
 
 
 void AInteractable::BeginPlay()
 {
+	Super::BeginPlay();
+	
 	if(GetWorld())
 	{
 		StartingLocationHover = GetActorLocation();
 		EndingLocationHover = GetActorLocation() + FVector(0.0f, 0.0f, LerpDistance);
 	}
+	
 }
 
 void AInteractable::Tick(float DeltaSeconds)
 {
-	if(canHover)
-	{
-		Hover(DeltaSeconds);
-	}
+	Super::Tick(DeltaSeconds);
+
 }
 
 void AInteractable::NotifyActorBeginOverlap(AActor* OtherActor)
@@ -79,7 +81,6 @@ void AInteractable::Hover(float DeltaTime)
 		}
 		rotation +=DeltaTime;
 		Mesh->SetRelativeRotation(FRotator(0.0f, rotation * rotationSpeed, 0.0f));
-		Mesh->SetWorldScale3D(FVector(1.5f, 1.5f, 1.5f));
 	}
 }
 

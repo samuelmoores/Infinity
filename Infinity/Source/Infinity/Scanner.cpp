@@ -12,7 +12,7 @@
 AScanner::AScanner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -21,7 +21,11 @@ void AScanner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+}
+
+void AScanner::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
 }
 
 void AScanner::NotifyActorBeginOverlap(AActor* OtherActor)

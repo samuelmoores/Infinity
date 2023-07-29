@@ -12,7 +12,7 @@ AGun::AGun()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	//Setup Muzzle flash so it's location can be on the end of the pistol mesh
 	MuzzleFlashLocation = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("MuzzleFlash"));
 	MuzzleFlashLocation->SetupAttachment(RootComponent);
@@ -30,6 +30,18 @@ AGun::AGun()
 	{
 		HitParticles = SparksFinder.Object;
 	}
+}
+
+void AGun::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void AGun::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	Hover(DeltaSeconds);
 }
 
 void AGun::UnequipGun(AInfinityCharacter* AttachPlayerCharacter)

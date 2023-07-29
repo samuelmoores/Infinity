@@ -13,5 +13,13 @@ UCLASS()
 class INFINITY_API APickup : public AInteractable
 {
 	GENERATED_BODY()
+
+	APickup();
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void Hover(float DeltaTime) override;
 	
 };

@@ -30,6 +30,10 @@ public:
 	// Sets default values for this actor's properties
 	AGun();
 
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
 	void UnequipGun(AInfinityCharacter* AttachPlayerCharacter);
 
 	//Shoot the gun using a Line Trace

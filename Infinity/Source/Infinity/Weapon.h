@@ -15,6 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	AWeapon();
 
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSeconds) override;
+
 	//Handles attachments to the player
 	void AttachToPlayer(AInfinityCharacter* AttachPlayerCharacter, AWeapon* Weapon);
 	void DetachFromPlayer();

@@ -42,7 +42,6 @@ protected:
 	
 	//Controls whether the mesh hovers up or down
 	int offset;
-	bool canHover;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
@@ -53,7 +52,7 @@ public:
 	FORCEINLINE bool GetCanInteract() const {return canInteract;}
 	
 	//The pistol mesh floats up and down before being picked up
-	void Hover(float DeltaTime);
+	virtual void Hover(float DeltaTime);
 	
 	//Is the pistol connected to the player
 	UPROPERTY(BlueprintReadOnly)
